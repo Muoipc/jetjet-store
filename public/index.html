@@ -1,0 +1,3814 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kho Khóa Học &amp; Tài Liệu Số JetJet — Tự Động Giao Link Drive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card-bg: #ffffff;
+      --border: #e8e8e8;
+      --border-dark: #111111;
+      --text: #111111;
+      --text-muted: #555555;
+      --text-subtle: #888888;
+      --surface: #f8f8f8;
+      --black: #0a0a0a;
+      --radius: 0.875rem;
+      --radius-sm: 0.5rem;
+      --radius-pill: 9999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+      width: 100%;
+    }
+
+    /* 1. Header */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      min-height: 4.25rem; padding-block: 0.5rem; gap: 0.75rem;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 1.25rem; font-weight: 800; color: var(--text);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .brand-tag {
+      font-size: 0.75rem; font-weight: 600; background: var(--surface);
+      border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: var(--radius-pill);
+      color: var(--text-muted);
+    }
+
+    .cart-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: #fff; border: 1px solid var(--border);
+      color: var(--text); padding: 0.5rem 1rem; border-radius: var(--radius-pill);
+      font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cart-btn:hover { border-color: var(--black); background: var(--surface); }
+    .cart-count {
+      background: var(--black); color: #fff; font-size: 0.75rem;
+      padding: 0.1rem 0.45rem; border-radius: 9999px; font-weight: 700;
+    }
+    .ui-icon {
+      width: 1rem;
+      height: 1rem;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* 2. Hero */
+    .hero {
+      padding-block: 3.5rem 2.5rem; border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-subtle); margin-bottom: 0.75rem;
+    }
+    .hero-title {
+      font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--text); line-height: 1.2; margin-bottom: 0.75rem;
+    }
+    @media (min-width: 640px) { .hero-title { font-size: 3rem; } }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--text-muted); max-width: 38rem; line-height: 1.6;
+    }
+
+    /* Filters */
+    .filters {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem;
+    }
+    .filter-chip {
+      background: #fff; border: 1px solid var(--border);
+      color: var(--text-muted); padding: 0.45rem 1rem; border-radius: var(--radius-pill);
+      font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover { border-color: var(--text); color: var(--text); }
+    .filter-chip.active {
+      background: var(--black); color: #fff; border-color: var(--black);
+    }
+
+    /* 3. Products Grid */
+    .products-section { padding-block: 3rem 5rem; }
+    .products-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+    }
+    @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .product-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .product-card:hover {
+      border-color: var(--border-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .card-top { margin-bottom: 1.5rem; }
+    .card-head-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .card-icon-wrap {
+      width: 3.25rem; height: 3.25rem; border-radius: 0.75rem;
+      background: #ffffff; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03); flex-shrink: 0;
+    }
+    .card-icon-img {
+      width: 2.25rem; height: 2.25rem; object-fit: contain; display: block;
+    }
+    .card-badges-wrap {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;
+    }
+    .card-cat { font-size: 0.75rem; font-weight: 600; color: var(--text-subtle); }
+    .card-badge {
+      font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill); background: var(--surface);
+      border: 1px solid var(--border); color: var(--text);
+    }
+
+    .card-name { font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.01em; line-height: 1.35; }
+    .card-desc { font-size: 0.825rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem; white-space: pre-line; }
+
+    .card-features {
+      list-style: none; display: flex; flex-direction: column; gap: 0.45rem;
+      border-top: 1px solid var(--border); padding-top: 1rem;
+    }
+    .feature-item {
+      font-size: 0.775rem; color: var(--text-muted); display: flex; align-items: baseline; gap: 0.5rem;
+    }
+    .feature-bullet { color: var(--black); font-size: 0.9rem; font-weight: 800; }
+
+    .card-bottom {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-top: 1.25rem; border-top: 1px solid var(--border);
+    }
+    .price-wrap { display: flex; flex-direction: column; }
+    .price-value { font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .price-duration { font-size: 0.75rem; color: var(--text-subtle); }
+
+    .btn-buy {
+      background: var(--black); color: #fff; border: 1px solid var(--black);
+      padding: 0.5rem 1.1rem; border-radius: var(--radius-pill);
+      font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .btn-buy:hover { background: #333; transform: scale(1.03); }
+
+    /* 4. Cart Drawer (Full White Minimal) */
+    .cart-drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px); z-index: 100; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .cart-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .cart-drawer {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: min(28rem, 100vw); background: #ffffff;
+      border-left: 1px solid var(--border); z-index: 101;
+      display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cart-drawer-backdrop.open .cart-drawer { transform: translateX(0); }
+
+    .drawer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .drawer-title { font-size: 1.05rem; font-weight: 700; }
+    .btn-icon-close {
+      background: none; border: none; font-size: 1.2rem; cursor: pointer;
+      color: var(--text-muted); padding: 0.25rem;
+    }
+    .btn-icon-close:hover { color: var(--black); }
+
+    .drawer-body {
+      flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .cart-empty-text {
+      text-align: center; color: var(--text-subtle); padding-block: 5rem; font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .cart-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem; background: var(--surface); border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .cart-row-title { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .cart-row-price { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; }
+    .qty-controls { display: flex; align-items: center; gap: 0.5rem; }
+    .btn-step {
+      width: 1.75rem; height: 1.75rem; border-radius: var(--radius-sm);
+      background: #fff; border: 1px solid var(--border); color: var(--text);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-step:hover { border-color: var(--black); }
+
+    .drawer-footer {
+      padding: 1.5rem; border-top: 1px solid var(--border);
+      background: #ffffff; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .total-line {
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .total-label { font-size: 0.875rem; color: var(--text-muted); }
+    .total-val { font-size: 1.35rem; font-weight: 800; color: var(--black); }
+
+    .btn-solid-black {
+      background: var(--black); color: #fff; border: none;
+      padding: 0.875rem; border-radius: var(--radius-pill);
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      text-align: center; width: 100%; transition: background 0.15s;
+    }
+    .btn-solid-black:hover { background: #333; }
+
+    /* 5. Checkout Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px); z-index: 110;
+      display: flex; align-items: center; justify-content: center; padding: 1.25rem;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: #ffffff; border: 1px solid var(--border);
+      border-radius: var(--radius); width: 100%; max-width: 30rem; padding: 1.75rem;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1); position: relative;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    .form-field label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .form-field input {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.7rem 0.875rem; border-radius: var(--radius-sm); font-size: 0.875rem;
+      outline: none; font-family: inherit; color: var(--text);
+    }
+    .form-field input:focus { border-color: var(--black); background: #fff; }
+
+    /* QR Payment Screen */
+    .qr-wrap {
+      display: none; flex-direction: column; align-items: center; text-align: center; gap: 1rem;
+    }
+    .qr-image {
+      width: 14rem; height: 14rem; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); padding: 0.5rem; background: #fff;
+    }
+    .transfer-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem; width: 100%;
+      text-align: left; font-size: 0.825rem; display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .transfer-row { display: flex; justify-content: space-between; }
+    .transfer-row span:last-child { font-weight: 700; color: var(--black); }
+
+    /* Auth Links */
+    #link-goto-register:hover, #link-goto-forgot:hover {
+      color: var(--black) !important;
+      text-decoration: underline !important;
+    }
+
+    /* Product Toolbar */
+    .product-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subtle);
+      pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.65rem 1rem 0.65rem 2.4rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-wrap input:focus {
+      border-color: var(--black);
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+    }
+    /* Custom Sort Dropdown */
+    .custom-sort-wrap {
+      position: relative;
+    }
+    .sort-trigger-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .sort-trigger-btn:hover {
+      border-color: var(--black);
+      background: var(--surface);
+    }
+    .custom-sort-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      min-width: 190px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      z-index: 100;
+      overflow: hidden;
+      padding: 0.35rem 0;
+    }
+    .sort-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.825rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.12s ease;
+    }
+    .sort-option-item:hover {
+      background: #f0f0f0;
+    }
+    .sort-option-item.active {
+      font-weight: 700;
+      background: var(--surface);
+    }
+    .sort-option-item .sort-check {
+      opacity: 0;
+      font-weight: 700;
+      color: var(--black);
+      font-size: 0.85rem;
+    }
+    .sort-option-item.active .sort-check {
+      opacity: 1;
+    }
+
+    /* Delivery & Action Badges */
+    .delivery-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.825rem;
+      color: #14532d;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+    .btn-copy-delivery {
+      background: #15803d;
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+    .btn-copy-delivery:hover {
+      background: #166534;
+    }
+    .btn-cancel-order {
+      background: #ffffff;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-cancel-order:hover {
+      background: #fef2f2;
+      border-color: #dc2626;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Account Dropdown */
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 1rem;
+      background: none;
+      border: none;
+      font-size: 0.825rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease;
+    }
+    .dropdown-item:hover {
+      background: var(--surface);
+    }
+
+    /* Notifications */
+    .notif-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      background: #ffffff;
+      transition: background 0.15s ease;
+    }
+    .notif-item:hover {
+      background: #f0f0f0;
+    }
+    .notif-item.unread {
+      background: var(--surface);
+    }
+    .notif-item .notif-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background: var(--black);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+    .notif-item.read .notif-dot {
+      background: transparent;
+    }
+    .notif-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* Profile Center 2-Column Redesign */
+    .profile-modal-box {
+      max-width: 48rem !important;
+      width: 95vw;
+      min-height: 32rem;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .profile-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+    }
+    .profile-modal-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text);
+    }
+    .profile-modal-body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    @media (max-width: 640px) {
+      .profile-modal-body {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+    }
+    /* Left Sidebar */
+    .profile-sidebar {
+      width: 14.5rem;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0.85rem;
+      overflow-y: auto;
+    }
+    @media (max-width: 640px) {
+      .profile-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1rem;
+      }
+    }
+    .profile-user-summary {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 1.25rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-avatar-circle {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: var(--black);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .profile-sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+    }
+    .profile-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .profile-nav-item:hover {
+      background: #ffffff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .profile-nav-item.active {
+      background: #ffffff;
+      color: var(--black);
+      border-color: var(--border);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      font-weight: 700;
+    }
+    .profile-nav-item.danger-nav {
+      color: #dc2626;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      gap: 0.45rem;
+      width: 100%;
+      border: 1px solid transparent;
+      opacity: 0.85;
+      transition: all 0.15s ease;
+    }
+    .profile-nav-item.danger-nav .ui-icon {
+      width: 0.85rem;
+      height: 0.85rem;
+    }
+    .profile-nav-item.danger-nav:hover {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+      opacity: 1;
+    }
+    .profile-nav-item.danger-nav.active {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fecaca;
+      opacity: 1;
+      font-weight: 700;
+    }
+    /* Right Content Area */
+    .profile-main-content {
+      flex: 1;
+      padding: 1.5rem 1.75rem;
+      overflow-y: auto;
+      background: #ffffff;
+    }
+    .profile-pane-header {
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-pane-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 0 0 0.25rem;
+      color: var(--text);
+    }
+    .profile-pane-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    /* Stat Cards inside Orders Tab */
+    .profile-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .profile-stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.85rem;
+    }
+    .profile-stat-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-subtle);
+    }
+    .profile-stat-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 0.25rem;
+    }
+
+    /* Toast System */
+    #toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .app-toast {
+      pointer-events: auto;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1.15rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      max-width: 24rem;
+      animation: toastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    @keyframes toastSlideUp {
+      from { opacity: 0; transform: translateY(12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Floating Toast System */
+    #global-toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .toast-item {
+      pointer-events: auto;
+      background: var(--black);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      animation: toastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      max-width: 380px;
+    }
+    .toast-item.toast-error {
+      background: #dc2626;
+    }
+    .toast-item.toast-success {
+      background: #15803d;
+    }
+    @keyframes toastSlideUp {
+      from { opacity: 0; transform: translateY(12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto; border-top: 1px solid var(--border);
+      padding-block: 2.5rem; text-align: center; font-size: 0.8rem; color: var(--text-subtle);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <svg class="ui-icon" style="width:1.25rem;height:1.25rem;" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>JetJet Store</span>
+        <span class="brand-tag">Kho Tri Thức &amp; Khóa Học Số</span>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <!-- Notification Bell (chỉ hiện khi đăng nhập) -->
+        <div id="notif-bell-wrap" style="display:none; position:relative;">
+          <button class="cart-btn" id="btn-notif-bell" title="Thông báo" style="position:relative; padding:0.5rem 0.65rem;">
+            <svg class="ui-icon" style="width:1.15rem;height:1.15rem;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span id="notif-badge" style="display:none; position:absolute; top:-4px; right:-4px; background:var(--black); color:#fff; font-size:0.65rem; font-weight:700; min-width:18px; height:18px; border-radius:999px; align-items:center; justify-content:center; line-height:1; border:2px solid #fff; padding:0 3px;">0</span>
+          </button>
+          <div id="notif-dropdown" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-sm); width:320px; max-height:380px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:999;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:1;">
+              <span style="font-weight:700; font-size:0.875rem;">Thông báo</span>
+              <button id="btn-notif-read-all" style="background:none; border:none; font-size:0.75rem; color:var(--text-muted); cursor:pointer; text-decoration:underline;">Đọc tất cả</button>
+            </div>
+            <div id="notif-list"></div>
+            <div id="notif-empty" style="display:none; padding:2rem; text-align:center; color:var(--text-muted); font-size:0.825rem;">Chưa có thông báo nào</div>
+          </div>
+        </div>
+
+        <button class="cart-btn" id="btn-open-cart" title="Giỏ hàng" style="padding:0.5rem 0.75rem;">
+          <svg class="ui-icon" style="width:1.15rem;height:1.15rem;" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span class="cart-count" id="cart-count-badge">0</span>
+        </button>
+        <div id="account-header-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Học lẹ mần ăn ngay • Tự động gửi link Google Drive tức thì sau khi chuyển khoản!</div>
+      <h1 class="hero-title">Kho Khóa Học &amp; Tài Liệu Số JetJet</h1>
+      <p class="hero-desc">Chuyên cung cấp khóa học thực chiến, bí kíp Prompt Engineering, giáo trình lập trình &amp; tự động hóa, tài liệu kinh doanh và combo công cụ. Mua xong có link tải về học liền!</p>
+
+      <!-- Category Filter -->
+      <div class="filters">
+        <button class="filter-chip active" data-cat="all">Tất cả tài liệu &amp; combo</button>
+        <button class="filter-chip" data-cat="Khóa học & Tài liệu số">🎓 Khóa học &amp; Tài liệu số</button>
+        <button class="filter-chip" data-cat="Combo AI + Khóa học">🔥 Combo Siêu Hời</button>
+      </div>
+
+      <!-- Search & Sort Toolbar -->
+      <div class="product-toolbar">
+        <div class="search-wrap">
+          <svg class="ui-icon search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-input" placeholder="Tìm kiếm khóa học, tài liệu số, prompt kit, combo..." />
+        </div>
+        <div class="custom-sort-wrap" id="sort-wrap">
+          <button type="button" class="sort-trigger-btn" id="btn-sort-trigger" aria-label="Sắp xếp sản phẩm">
+            <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+            <span id="sort-current-label">Phổ biến nhất</span>
+            <svg class="ui-icon" style="width:0.8rem;height:0.8rem;" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="custom-sort-menu" id="sort-menu">
+            <button type="button" class="sort-option-item active" data-val="default">
+              <span>Phổ biến nhất</span>
+              <span class="sort-check">✓</span>
+            </button>
+            <button type="button" class="sort-option-item" data-val="price-asc">
+              <span>Giá: Thấp đến cao</span>
+              <span class="sort-check">✓</span>
+            </button>
+            <button type="button" class="sort-option-item" data-val="price-desc">
+              <span>Giá: Cao đến thấp</span>
+              <span class="sort-check">✓</span>
+            </button>
+            <button type="button" class="sort-option-item" data-val="name-asc">
+              <span>Tên: A - Z</span>
+              <span class="sort-check">✓</span>
+            </button>
+          </div>
+          <input type="hidden" id="sort-select" value="default" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <main class="container products-section">
+    <div class="products-grid" id="grid-container">
+      <!-- Nạp dữ liệu qua API -->
+    </div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer-backdrop" id="cart-backdrop">
+    <div class="cart-drawer">
+      <div class="drawer-header">
+        <h3 class="drawer-title" style="display:flex;align-items:center;gap:0.5rem;">
+          <svg class="ui-icon" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span>Giỏ hàng</span>
+        </h3>
+        <button class="btn-icon-close" id="btn-close-cart" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="drawer-body" id="cart-body">
+        <div style="text-align:center; padding:3.5rem 1.5rem; color:var(--text-muted);">
+          <svg class="ui-icon" style="width:3rem;height:3rem;margin-bottom:0.75rem;color:var(--text-subtle);" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng của bạn đang trống</div>
+          <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp để thêm vào giỏ nhé!</div>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <button id="btn-clear-cart" type="button" style="background:none; border:none; color:var(--text-subtle); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Xóa sạch giỏ hàng</button>
+          <div class="total-line" style="margin:0;">
+            <span class="total-label">Tổng cộng:</span>
+            <span class="total-val" id="drawer-total">0đ</span>
+          </div>
+        </div>
+        <button class="btn-solid-black" id="btn-checkout-start" style="opacity:0.45; cursor:not-allowed;" disabled>Tiến hành thanh toán →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;" id="modal-heading">
+          <svg class="ui-icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>Xác nhận đơn hàng</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-modal" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Customer Form -->
+      <form id="checkout-form">
+        <!-- Order Items Mini Summary -->
+        <div style="margin-bottom:1.15rem;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-subtle); text-transform:uppercase; margin-bottom:0.4rem; letter-spacing:0.04em;">Các món đang chọn:</div>
+          <div id="checkout-items-summary" style="max-height:130px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.6rem 0.85rem; background:var(--surface); display:flex; flex-direction:column; gap:0.4rem;"></div>
+        </div>
+
+        <!-- Logged-in Customer View -->
+        <div id="checkout-user-box" style="display:none; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.9rem 1rem; margin-bottom:1.15rem;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem; letter-spacing:0.04em; display:flex; justify-content:space-between; align-items:center;">
+            <span>Thông tin nhận link Drive</span>
+            <span style="font-size:0.725rem; color:#15803d; font-weight:600; text-transform:none;">✓ Thành viên đã đăng nhập</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.85rem;">
+            <div><span style="color:var(--text-muted);">Họ tên:</span> <strong id="checkout-display-name"></strong></div>
+            <div><span style="color:var(--text-muted);">Gmail nhận tài liệu:</span> <strong id="checkout-display-email"></strong></div>
+          </div>
+        </div>
+
+        <!-- Guest Customer View -->
+        <div id="checkout-guest-box" style="display:none; margin-bottom:1.15rem;">
+          <div class="form-field" style="margin-bottom:0.75rem;">
+            <label for="c-guest-email" style="font-weight:700; font-size:0.85rem; color:var(--text);">
+              Gmail Google nhận tài liệu &amp; link Drive <span style="color:#dc2626;">*</span>
+            </label>
+            <input type="email" id="c-guest-email" placeholder="ví dụ: nguyenvana@gmail.com" style="width:100%; box-sizing:border-box;" />
+            <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:0.25rem;">
+              Hệ thống sẽ cấp quyền xem và tải folder tài liệu trực tiếp vào Gmail này.
+            </div>
+          </div>
+          <div class="form-field" style="margin-bottom:0.5rem;">
+            <label for="c-guest-name" style="font-size:0.825rem; color:var(--text-muted);">
+              Tên của bạn (Tùy chọn)
+            </label>
+            <input type="text" id="c-guest-name" placeholder="Nguyễn Văn A" style="width:100%; box-sizing:border-box;" />
+          </div>
+          <div style="font-size:0.775rem; color:var(--text-muted);">
+            Đã có tài khoản? <a href="/login.html" style="color:var(--black); font-weight:700; text-decoration:underline;">Đăng nhập nhanh</a> để lưu đơn vào tài khoản.
+          </div>
+        </div>
+
+        <input type="hidden" id="c-name" />
+        <input type="hidden" id="c-email" />
+
+        <div class="form-field" style="margin-bottom:1rem;">
+          <label for="c-notes" style="font-size:0.8rem; color:var(--text-muted);">Ghi chú cho Phúc (nếu có)</label>
+          <input type="text" id="c-notes" placeholder="Ví dụ: Cần hỗ trợ cài môi trường Python" style="width:100%; box-sizing:border-box;" />
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; padding-top:1rem; border-top:1px solid var(--border);">
+          <div>
+            <div style="font-size:0.7rem; color:var(--text-subtle);">Tổng thanh toán</div>
+            <div style="font-size:1.25rem; font-weight:800; color:var(--black);" id="checkout-sum">0đ</div>
+          </div>
+          <button type="submit" class="btn-solid-black" style="padding:0.75rem 1.4rem; font-weight:700; border-radius:var(--radius-sm);" id="btn-submit-order">
+            Tạo mã VietQR thanh toán →
+          </button>
+        </div>
+      </form>
+
+      <!-- QR Payment Screen -->
+      <div class="qr-wrap" id="qr-wrap">
+        <div id="qr-normal-content" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.9rem; width:100%;">
+          <div style="font-weight:700; font-size:1.1rem; color:var(--black);">🎉 Đã tạo đơn hàng thành công!</div>
+          <p style="font-size:0.8125rem; color:var(--text-muted); line-height:1.5;">Quý khách quét mã VietQR bằng app ngân hàng. Hệ thống tự động kiểm tra giao dịch và mở link Google Drive tải tài liệu tức thì sau 3 giây!</p>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:0.5rem; background:var(--surface); border:1px solid var(--border); padding:0.6rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem;">
+            <span>Mã tra cứu: <strong id="order-code-display" style="user-select:all; font-family:monospace; font-size:1.05rem; color:var(--black); letter-spacing:0.05em;"></strong></span>
+            <span style="font-size:0.8rem; color:var(--text-muted); display:inline-flex; align-items:center; gap:0.35rem;">
+              <svg class="ui-icon" style="width:0.9rem;height:0.9rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Giữ đơn: <strong id="qr-countdown" style="color:#dc2626; font-family:monospace; font-size:0.9rem;">15:00</strong></span>
+            </span>
+          </div>
+
+          <img class="qr-image" id="qr-code-img" src="" alt="Mã QR Chuyển khoản" />
+          
+          <div class="transfer-box">
+            <div class="transfer-row"><span>Ngân hàng:</span> <span id="t-bank">MB Bank</span></div>
+            <div class="transfer-row"><span>Số tài khoản:</span> <span id="t-acc">241620968888</span></div>
+            <div class="transfer-row"><span>Chủ tài khoản:</span> <span>NGUYEN SONG HOANG PHUC</span></div>
+            <div class="transfer-row"><span>Số tiền:</span> <span id="t-amount" style="color:var(--black);">0đ</span></div>
+            <div class="transfer-row"><span>Nội dung CK:</span> <span id="t-content" style="color:#d97706; font-weight:800;">JETJET</span></div>
+          </div>
+
+          <div style="font-size:0.775rem; color:var(--text-subtle); display:flex; align-items:center; gap:0.4rem;">
+            <svg class="ui-icon" style="width:0.85rem;height:0.85rem;animation:spin 2s linear infinite;" viewBox="0 0 24 24"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>
+            <span>Hệ thống đang tự động kiểm tra giao dịch mỗi 4 giây...</span>
+          </div>
+
+          <button class="btn-solid-black" style="padding:0.75rem;" id="btn-done">Dạ xong rồi, cảm ơn quý dzị!</button>
+        </div>
+
+        <!-- Celebratory Paid View -->
+        <div id="qr-paid-success" style="display:none; flex-direction:column; align-items:center; text-align:center; gap:0.9rem; width:100%; padding-block:1rem;">
+          <div style="width:4.25rem; height:4.25rem; border-radius:50%; background:#dcfce7; display:flex; align-items:center; justify-content:center; color:#15803d; border:2px solid #86efac;">
+            <svg class="ui-icon" style="width:2.25rem;height:2.25rem;" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div style="font-weight:800; font-size:1.2rem; color:#15803d; line-height:1.35;">🎉 ĐÃ NHẬN TIỀN THANH TOÁN THÀNH CÔNG!</div>
+          <p id="qr-paid-desc" style="font-size:0.875rem; color:var(--text-muted); line-height:1.6; max-width:24rem; margin:0;">Hệ thống đã nhận thanh toán và tự động kích hoạt tài liệu. Nhấn nút bên dưới để mở link Google Drive học ngay!</p>
+          
+          <div id="qr-paid-drive-link" style="width:100%; display:none;"></div>
+
+          <button class="btn-solid-black" id="btn-view-paid-order" style="padding:0.8rem 1.5rem; display:inline-flex; align-items:center; gap:0.5rem; justify-content:center; width:auto; min-width:14rem;">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+            <span>📦 Xem chi tiết đơn hàng</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Tracking Modal -->
+  <div class="modal-backdrop" id="track-modal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <h2 style="font-size:1.125rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+          <svg class="ui-icon" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+          <span>Tra cứu đơn hàng</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-track" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div style="display:flex; gap:0.5rem; margin-bottom:1.25rem;">
+        <input type="text" id="track-input" placeholder="VD: JJ26110401" style="flex:1; text-transform:uppercase; background:var(--surface); border:1px solid var(--border); padding:0.7rem 0.875rem; border-radius:var(--radius-sm); font-size:0.875rem; outline:none; font-family:inherit; color:var(--text);" />
+        <button type="button" class="btn-buy" id="btn-track-submit" style="flex-shrink:0;">Tra cứu</button>
+      </div>
+
+      <div id="track-result"></div>
+    </div>
+  </div>
+
+  <!-- User Auth Modal -->
+  <div class="modal-backdrop" id="user-auth-modal">
+    <div class="modal-box" style="max-width: 26rem; padding: 1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;" id="user-auth-modal-title">
+          <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="user-auth-modal-title-text">Đăng nhập</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-user-auth" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="auth-msg-box" style="display:none; margin-bottom:1rem; padding:0.65rem 0.85rem; border-radius:var(--radius-sm); font-size:0.825rem; line-height:1.4;"></div>
+
+      <!-- Tab 1: Đăng nhập -->
+      <div id="tab-login" class="auth-tab-pane">
+        <form id="form-login">
+          <div class="form-field">
+            <label for="login-email">Email đăng nhập</label>
+            <input type="email" id="login-email" required placeholder="nhapemail@gmail.com" />
+          </div>
+          <div class="form-field">
+            <label for="login-password">Mật khẩu</label>
+            <input type="password" id="login-password" required placeholder="••••••••" />
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; margin-top:-0.25rem;">
+            <a href="#" id="link-goto-register" style="font-size:0.8rem; color:var(--text-muted); text-decoration:none; transition:color 0.15s ease;">Tạo tài khoản</a>
+            <a href="#" id="link-goto-forgot" style="font-size:0.8rem; color:var(--text-muted); text-decoration:none; transition:color 0.15s ease;">Quên mật khẩu?</a>
+          </div>
+          <button type="submit" class="btn-buy" style="width:100%; padding:0.75rem; justify-content:center;" id="btn-submit-login">Đăng nhập</button>
+          
+          <div style="margin-top:1.25rem; padding-top:1rem; border-top:1px dashed var(--border);">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; margin-bottom:0.6rem; letter-spacing:0.04em; text-align:center;">Đăng nhập nhanh 1 chạm</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" id="btn-modal-quick-user" class="cart-btn" style="flex:1; justify-content:center; font-size:0.8rem; padding:0.5rem; border-color:#bbf7d0; background:#f0fdf4; color:#166534;">
+                <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>User lẹ</span>
+              </button>
+              <button type="button" id="btn-modal-quick-admin" class="cart-btn" style="flex:1; justify-content:center; font-size:0.8rem; padding:0.5rem; border-color:#fed7aa; background:#fff7ed; color:#c2410c;">
+                <svg class="ui-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Admin lẹ</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab 2: Đăng ký 2 bước -->
+      <div id="tab-register" class="auth-tab-pane" style="display:none;">
+        <form id="form-register-step-a">
+          <div class="form-field">
+            <label for="reg-name">Tên</label>
+            <input type="text" id="reg-name" required placeholder="Tên của bạn" />
+          </div>
+          <div class="form-field">
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" required placeholder="email@gmail.com" />
+          </div>
+          <div class="form-field">
+            <label for="reg-password">Mật khẩu</label>
+            <input type="password" id="reg-password" minlength="6" required placeholder="Tối thiểu 6 ký tự" />
+          </div>
+          <div class="form-field">
+            <label for="reg-confirm-password">Nhập lại mật khẩu</label>
+            <input type="password" id="reg-confirm-password" minlength="6" required placeholder="Nhập lại mật khẩu" />
+          </div>
+          <button type="submit" class="btn-buy" style="width:100%; padding:0.75rem; justify-content:center;" id="btn-submit-reg-a">Gửi mã xác thực qua Email</button>
+          <div style="text-align:center; margin-top:0.85rem;">
+            <a href="#" id="link-reg-goto-login" style="font-size:0.8rem; color:var(--text-muted); text-decoration:none;">Đã có tài khoản? <span style="text-decoration:underline; color:var(--text); font-weight:600;">Đăng nhập</span></a>
+          </div>
+        </form>
+
+        <form id="form-register-step-b" style="display:none;">
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; text-align:center; line-height:1.5;">
+            Mã OTP 6 số đã được gửi qua email <strong id="reg-target-email" style="color:var(--text);"></strong>.<br>Quý dzị kiểm tra hộp thư đến (hoặc hòm thư Spam/Rác) giùm em nha!
+          </div>
+          <div class="form-field">
+            <label for="reg-otp" style="text-align:center;">Mã xác thực OTP (6 số)</label>
+            <input type="text" id="reg-otp" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" style="text-align:center; font-size:1.5rem; font-weight:800; letter-spacing:0.35rem; font-family:monospace;" />
+          </div>
+          <button type="submit" class="btn-buy" style="width:100%; padding:0.75rem; justify-content:center; margin-bottom:0.75rem;" id="btn-submit-reg-b">Xác nhận & Kích hoạt tài khoản</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; font-size:0.8rem;">
+            <button type="button" id="btn-reg-back" style="background:none; border:none; font-size:0.8rem; color:var(--text-muted); cursor:pointer; text-decoration:underline;">← Quay lại</button>
+            <button type="button" id="btn-resend-reg-otp" style="background:none; border:none; font-size:0.8rem; color:var(--text); font-weight:600; cursor:pointer; text-decoration:underline;">Gửi lại mã OTP</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab 3: Quên / Đổi mật khẩu 2 bước -->
+      <div id="tab-forgot" class="auth-tab-pane" style="display:none;">
+        <form id="form-forgot-step-a">
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.5;">
+            Nhập email tài khoản của quý dzị, em sẽ gửi mã OTP 6 số để bà con đổi mật khẩu mới phẻ re!
+          </div>
+          <div class="form-field">
+            <label for="forgot-email">Email tài khoản</label>
+            <input type="email" id="forgot-email" required placeholder="nhapemail@gmail.com" />
+          </div>
+          <button type="submit" class="btn-buy" style="width:100%; padding:0.75rem; justify-content:center;" id="btn-submit-forgot-a">Gửi mã OTP</button>
+          <div style="text-align:center; margin-top:0.85rem;">
+            <a href="#" id="link-forgot-goto-login" style="font-size:0.8rem; color:var(--text-muted); text-decoration:none;">Nhớ mật khẩu rồi? <span style="text-decoration:underline; color:var(--text); font-weight:600;">Đăng nhập</span></a>
+          </div>
+        </form>
+
+        <form id="form-forgot-step-b" style="display:none;">
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; text-align:center; line-height:1.5;">
+            Mã OTP đã gửi tới <strong id="forgot-target-email" style="color:var(--text);"></strong>.<br>Bà con nhập mã và gõ mật khẩu mới nghen!
+          </div>
+          <div class="form-field">
+            <label for="forgot-otp" style="text-align:center;">Mã xác thực OTP (6 số)</label>
+            <input type="text" id="forgot-otp" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" style="text-align:center; font-size:1.5rem; font-weight:800; letter-spacing:0.35rem; font-family:monospace;" />
+          </div>
+          <div class="form-field">
+            <label for="forgot-new-pass">Mật khẩu mới (>= 6 ký tự)</label>
+            <input type="password" id="forgot-new-pass" minlength="6" required placeholder="Tối thiểu 6 ký tự" />
+          </div>
+          <div class="form-field">
+            <label for="forgot-confirm-pass">Xác nhận lại mật khẩu mới</label>
+            <input type="password" id="forgot-confirm-pass" minlength="6" required placeholder="Nhập lại mật khẩu mới" />
+          </div>
+          <button type="submit" class="btn-buy" style="width:100%; padding:0.75rem; justify-content:center; margin-bottom:0.75rem;" id="btn-submit-forgot-b">Cập nhật mật khẩu mới</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; font-size:0.8rem;">
+            <button type="button" id="btn-forgot-back" style="background:none; border:none; font-size:0.8rem; color:var(--text-muted); cursor:pointer; text-decoration:underline;">← Quay lại</button>
+            <button type="button" id="btn-resend-forgot-otp" style="background:none; border:none; font-size:0.8rem; color:var(--text); font-weight:600; cursor:pointer; text-decoration:underline;">Gửi lại mã OTP</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Orders Modal -->
+  <div class="modal-backdrop" id="my-orders-modal">
+    <div class="modal-box" style="max-width: 38rem; max-height: 85vh; display:flex; flex-direction:column;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.125rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+          <svg class="ui-icon" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          <span>Đơn hàng của tôi</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-my-orders" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="my-orders-list" style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:1rem; padding-right:0.25rem;">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Center Modal (2-Column Redesign) -->
+  <div class="modal-backdrop" id="profile-modal">
+    <div class="modal-box profile-modal-box">
+      <!-- Modal Top Bar -->
+      <div class="profile-modal-header">
+        <h3 class="profile-modal-title">
+          <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Trang cá nhân thành viên</span>
+        </h3>
+        <button class="btn-icon-close" id="btn-close-profile" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (2-Column Flex) -->
+      <div class="profile-modal-body">
+        <!-- Left Sidebar -->
+        <aside class="profile-sidebar">
+          <div class="profile-user-summary">
+            <div class="profile-avatar-wrapper" style="position:relative; width:3.5rem; height:3.5rem; flex-shrink:0;">
+              <div class="profile-avatar-circle" id="profile-avatar-monogram" style="width:100%; height:100%; font-size:1.15rem; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; border:2px solid var(--border);" title="Bấm để đổi ảnh đại diện">
+                PH
+              </div>
+              <button type="button" id="btn-change-avatar" title="Đổi ảnh đại diện" style="position:absolute; bottom:-3px; right:-3px; width:1.35rem; height:1.35rem; border-radius:50%; background:var(--black); color:#fff; border:2px solid #fff; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
+                <svg class="ui-icon" style="width:0.75rem;height:0.75rem;" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </button>
+              <input type="file" id="avatar-file-input" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;" />
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:800; font-size:0.925rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="profile-card-name">Tên thành viên</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); display:flex; align-items:center; gap:0.25rem; margin-top:2px;">
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="profile-card-email">email@domain.com</span>
+                <span style="color:#16a34a; font-weight:800;" title="Đã xác thực">✓</span>
+              </div>
+              <button type="button" id="btn-remove-avatar" style="display:none; background:none; border:none; color:var(--text-muted); font-size:0.7rem; cursor:pointer; padding:0; text-decoration:underline; margin-top:3px;">Gỡ ảnh đại diện</button>
+            </div>
+          </div>
+
+          <!-- Sidebar Vertical Navigation -->
+          <nav class="profile-sidebar-nav">
+            <button type="button" class="profile-nav-item active" data-tab="tab-prof-info">
+              <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Thông tin cá nhân</span>
+            </button>
+            <button type="button" class="profile-nav-item" data-tab="tab-prof-orders">
+              <svg class="ui-icon" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+              <span>Đơn hàng của tôi</span>
+            </button>
+            <button type="button" class="profile-nav-item" data-tab="tab-prof-security">
+              <svg class="ui-icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Đổi mật khẩu</span>
+            </button>
+            <div style="margin-top:0.75rem; padding-top:0.65rem; border-top:1px dashed var(--border);">
+              <button type="button" class="profile-nav-item danger-nav" data-tab="tab-prof-danger">
+                <svg class="ui-icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+                <span>Xóa tài khoản</span>
+              </button>
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="profile-main-content">
+          <div id="profile-alert-box" style="display:none; margin-bottom:1rem; padding:0.65rem 0.85rem; border-radius:var(--radius-sm); font-size:0.825rem; line-height:1.4;"></div>
+
+          <!-- TAB 1: THÔNG TIN CÁ NHÂN -->
+          <div class="profile-tab-pane active" id="tab-prof-info">
+            <div class="profile-pane-header">
+              <h4 class="profile-pane-title">Thông tin tài khoản</h4>
+              <p class="profile-pane-subtitle">Quản lý tên hiển thị và thông tin liên hệ của bạn tại JetJet Store.</p>
+            </div>
+            <form id="form-profile-info">
+              <div class="form-field">
+                <label for="prof-info-email">Địa chỉ Email</label>
+                <div style="position:relative; display:flex; align-items:center; width:100%;">
+                  <input type="email" id="prof-info-email" disabled readonly style="background:var(--surface); opacity:0.85; cursor:not-allowed; padding-right:2.5rem; width:100%; box-sizing:border-box;" />
+                  <span style="position:absolute; right:0.75rem; font-size:0.95rem; color:#16a34a; font-weight:800; pointer-events:none;" title="Đã xác thực">✓</span>
+                </div>
+                <small style="color:var(--text-subtle); font-size:0.75rem; margin-top:0.25rem;">Email định danh tài khoản không thể chỉnh sửa</small>
+              </div>
+
+              <div class="form-field">
+                <label for="prof-info-name">Họ và tên hiển thị</label>
+                <input type="text" id="prof-info-name" required placeholder="Nhập họ và tên của bạn" style="width:100%; box-sizing:border-box;" />
+              </div>
+
+              <button type="submit" class="btn-buy" id="btn-save-prof-info" style="padding:0.65rem 1.4rem; justify-content:center; margin-top:0.5rem;">
+                Lưu thay đổi thông tin
+              </button>
+            </form>
+          </div>
+
+          <!-- TAB 2: ĐƠN HÀNG CỦA TÔI (CHUYỂN STATS VÀO ĐÂY) -->
+          <div class="profile-tab-pane" id="tab-prof-orders" style="display:none;">
+            <div class="profile-pane-header">
+              <h4 class="profile-pane-title">Lịch sử đơn hàng</h4>
+              <p class="profile-pane-subtitle">Thống kê mua sắm và các đơn hàng gần đây của bạn.</p>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="profile-stats-row">
+              <div class="profile-stat-box">
+                <div class="profile-stat-label">Tổng đơn hàng</div>
+                <div class="profile-stat-value" id="stat-total-orders">0</div>
+              </div>
+              <div class="profile-stat-box">
+                <div class="profile-stat-label">Tổng chi tiêu</div>
+                <div class="profile-stat-value" id="stat-total-spent">0đ</div>
+              </div>
+              <div class="profile-stat-box">
+                <div class="profile-stat-label">Đang chờ xử lý</div>
+                <div class="profile-stat-value" id="stat-pending-orders">0</div>
+              </div>
+            </div>
+
+            <div style="font-size:0.8rem; font-weight:700; color:var(--text); margin-bottom:0.65rem;">Đơn hàng gần đây:</div>
+            <div id="profile-recent-orders-list" style="display:flex; flex-direction:column; gap:0.65rem;">
+              <!-- Injected via JS -->
+            </div>
+
+            <div style="text-align:center; margin-top:1.25rem;">
+              <button type="button" class="cart-btn" id="btn-prof-view-all-orders" style="width:100%; justify-content:center; padding:0.65rem;">
+                Xem chi tiết tất cả đơn hàng
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 3: ĐỔI MẬT KHẨU -->
+          <div class="profile-tab-pane" id="tab-prof-security" style="display:none;">
+            <div class="profile-pane-header">
+              <h4 class="profile-pane-title">Bảo mật & Đổi mật khẩu</h4>
+              <p class="profile-pane-subtitle">Cập nhật mật khẩu định kỳ để bảo vệ tài khoản của bạn.</p>
+            </div>
+            <form id="form-profile-change-pw">
+              <div class="form-field">
+                <label for="prof-pw-current">Mật khẩu hiện tại</label>
+                <input type="password" id="prof-pw-current" required placeholder="Nhập mật khẩu đang dùng" />
+              </div>
+              <div class="form-field">
+                <label for="prof-pw-new">Mật khẩu mới</label>
+                <input type="password" id="prof-pw-new" minlength="6" required placeholder="Tối thiểu 6 ký tự" />
+              </div>
+              <div class="form-field">
+                <label for="prof-pw-confirm">Xác nhận lại mật khẩu mới</label>
+                <input type="password" id="prof-pw-confirm" minlength="6" required placeholder="Nhập lại mật khẩu mới" />
+              </div>
+              <button type="submit" class="btn-buy" id="btn-save-prof-pw" style="padding:0.65rem 1.4rem; justify-content:center; margin-top:0.5rem;">
+                Cập nhật mật khẩu mới
+              </button>
+            </form>
+          </div>
+
+          <!-- TAB 4: XÓA TÀI KHOẢN -->
+          <div class="profile-tab-pane" id="tab-prof-danger" style="display:none;">
+            <div class="profile-pane-header">
+              <h4 class="profile-pane-title" style="color:#b91c1c;">Xóa tài khoản thành viên</h4>
+              <p class="profile-pane-subtitle">Hành động này mang tính vĩnh viễn và không thể khôi phục.</p>
+            </div>
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
+              <p style="font-size:0.8rem; color:#7f1d1d; margin:0; line-height:1.5;">
+                Khi xóa tài khoản, toàn bộ phiên đăng nhập của quý dzị sẽ bị hủy ngay lập tức. Các đơn hàng cũ vẫn được tiệm lưu trữ theo quy định bảo hành nhưng sẽ gỡ liên kết với email này.
+              </p>
+            </div>
+            <div class="form-field">
+              <label for="prof-delete-pw">Nhập mật khẩu hiện tại để xác nhận</label>
+              <input type="password" id="prof-delete-pw" placeholder="Mật khẩu của bạn" />
+            </div>
+            <button type="button" class="btn-buy" id="btn-prof-delete-account" style="background:#dc2626; border-color:#dc2626; color:#fff; padding:0.55rem 1.15rem; font-size:0.825rem; font-weight:700; width:auto;">
+              Xác nhận xóa vĩnh viễn tài khoản
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-backdrop" id="change-pw-modal">
+    <div class="modal-box" style="max-width:26rem; padding:1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.15rem; font-weight:700; margin:0; display:flex; align-items:center; gap:0.5rem;">
+          <svg class="ui-icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Đổi mật khẩu</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-change-pw" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div id="change-pw-msg" style="display:none; margin-bottom:1rem; padding:0.65rem 0.85rem; border-radius:var(--radius-sm); font-size:0.825rem; line-height:1.4;"></div>
+      <form id="form-change-pw">
+        <div class="form-field">
+          <label for="cpw-current">Mật khẩu hiện tại</label>
+          <input type="password" id="cpw-current" required placeholder="••••••••" />
+        </div>
+        <div class="form-field">
+          <label for="cpw-new">Mật khẩu mới</label>
+          <input type="password" id="cpw-new" minlength="6" required placeholder="Tối thiểu 6 ký tự" />
+        </div>
+        <div class="form-field">
+          <label for="cpw-confirm">Nhập lại mật khẩu mới</label>
+          <input type="password" id="cpw-confirm" minlength="6" required placeholder="Nhập lại mật khẩu mới" />
+        </div>
+        <button type="submit" class="btn-buy" id="btn-submit-change-pw" style="width:100%; padding:0.7rem; justify-content:center; margin-top:0.5rem;">Đổi mật khẩu</button>
+      </form>
+    </div>
+  </div>
+  <!-- Product Quick View / Detail Modal -->
+  <div class="modal-backdrop" id="product-detail-modal">
+    <div class="modal-box" style="max-width: 32rem; max-height: 88vh; display:flex; flex-direction:column; padding: 1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.25rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div id="modal-p-icon-wrap" class="card-icon-wrap" style="width:3.5rem; height:3.5rem;">
+            <!-- Injected via JS -->
+          </div>
+          <div>
+            <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.25rem;">
+              <span id="modal-p-cat" class="card-cat" style="font-size:0.75rem;"></span>
+              <span id="modal-p-badge" class="card-badge" style="display:none;"></span>
+            </div>
+            <h2 id="modal-p-name" style="font-size:1.25rem; font-weight:800; line-height:1.3; color:var(--text); margin:0;"></h2>
+          </div>
+        </div>
+        <button class="btn-icon-close" id="btn-close-product-detail" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div style="overflow-y:auto; flex:1; padding-right:0.25rem; display:flex; flex-direction:column; gap:1rem;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; padding:0.85rem 1rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm);">
+          <div>
+            <div id="modal-p-price" style="font-size:1.35rem; font-weight:800; color:var(--black); letter-spacing:-0.02em;"></div>
+            <div id="modal-p-duration" style="font-size:0.75rem; color:var(--text-subtle);"></div>
+          </div>
+          <div id="modal-p-stock"></div>
+        </div>
+
+        <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.6; white-space:pre-line;" id="modal-p-desc"></div>
+
+        <div>
+          <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-subtle); margin-bottom:0.5rem; letter-spacing:0.04em;">Tính năng nổi bật:</div>
+          <ul id="modal-p-features" class="card-features" style="border:none; padding:0; gap:0.4rem;"></ul>
+        </div>
+
+        <!-- Detailed Warranty & Usage Box (Dynamically Rendered) -->
+        <div id="modal-p-guarantee"></div>
+      </div>
+
+      <!-- Actions: Buy Now & Add to Cart -->
+      <div style="display:flex; align-items:center; gap:0.65rem; padding-top:1.15rem; border-top:1px solid var(--border); margin-top:0.5rem;">
+        <button class="btn-solid-black" id="modal-btn-buy-now" style="flex:1.2; padding:0.75rem; font-weight:700; border-radius:var(--radius-sm);">⚡ Mua ngay</button>
+        <button class="cart-btn" id="modal-btn-add-cart" style="flex:1; justify-content:center; padding:0.75rem; font-weight:600; border-radius:var(--radius-sm);">+ Thêm vào giỏ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ & Warranty Modal -->
+  <div class="modal-backdrop" id="faq-modal">
+    <div class="modal-box" style="max-width: 36rem; max-height: 85vh; display:flex; flex-direction:column; padding: 1.75rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+          <svg class="ui-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Chính sách bảo hành & FAQ</span>
+        </h2>
+        <button class="btn-icon-close" id="btn-close-faq" aria-label="Đóng">
+          <svg class="ui-icon" style="width:1.1rem;height:1.1rem;" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:1rem; padding-right:0.25rem;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-sm); padding:1rem; font-size:0.85rem; color:#166534; line-height:1.6;">
+          <strong style="display:block; margin-bottom:0.35rem; font-size:0.925rem;">🛡️ Cam kết quyền lợi & Quyền truy cập trọn đời:</strong>
+          Tất cả khóa học, ebook và tài liệu số tại JetJet Store đều được lưu trữ trên Google Drive bảo mật. Quý khách sở hữu vĩnh viễn, được cấp quyền xem trực tuyến và tải về máy tính / điện thoại không giới hạn.
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem;">
+            <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.4rem; color:var(--text);">⚡ Tôi sẽ nhận tài liệu và khóa học bằng cách nào?</div>
+            <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">
+              Hệ thống tự động hóa hoàn toàn 24/7. Ngay khi quý khách quét mã VietQR chuyển khoản thành công, <strong>link Google Drive sẽ hiển thị trực tiếp trên màn hình</strong> và được lưu vĩnh viễn trong mục "Đơn hàng của tôi".
+            </div>
+          </div>
+
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem;">
+            <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.4rem; color:var(--text);">🔄 Chính sách cập nhật tài liệu và bài giảng mới?</div>
+            <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">
+              Toàn bộ bài giảng bổ sung, template prompt mới hoặc source code nâng cấp sẽ được tải trực tiếp vào thư mục Google Drive của khóa học. Quý khách được <strong>cập nhật miễn phí trọn đời</strong> mà không phải trả thêm bất kỳ khoản phí nào.
+            </div>
+          </div>
+
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem;">
+            <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.4rem; color:var(--text);">🎁 Gói Combo AI + Khóa học hoạt động ra sao?</div>
+            <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">
+              Với đơn Combo, bạn nhận ngay link Google Drive của khóa học sau 3 giây. Phần tài khoản AI chính chủ (ChatGPT Plus / Cursor Pro) sẽ được Phúc kích hoạt và bàn giao trong <strong>5 đến 15 phút</strong> kèm chính sách bảo hành 1 đổi 1 suốt 30 ngày.
+            </div>
+          </div>
+
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem;">
+            <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.4rem; color:var(--text);">📞 Kênh hỗ trợ kỹ thuật & Hướng dẫn thực hành:</div>
+            <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">
+              • Zalo / Hotline: <strong>0912345678 (Nguyễn Song Hoàng Phúc)</strong><br>
+              • Email kỹ thuật: <strong>hotro@jetjet.store</strong><br>
+              • Hỗ trợ giải đáp thắc mắc về cài đặt môi trường code, ứng dụng Prompt từ <strong>08:00 đến 23:00</strong> mỗi ngày.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirm & Alert Dialog -->
+  <div class="modal-backdrop" id="custom-confirm-modal" style="z-index: 10000;">
+    <div class="modal-box" style="max-width: 25rem; padding: 1.75rem; text-align: center; border-radius: var(--radius); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+      <div id="confirm-icon-wrap" style="width: 3.25rem; height: 3.25rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+        <!-- Injected icon -->
+      </div>
+      <h3 id="confirm-title" style="font-size: 1.15rem; font-weight: 800; color: var(--text); margin: 0 0 0.5rem 0; line-height: 1.3;">Xác nhận</h3>
+      <div id="confirm-message" style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1.5rem;"></div>
+      <div style="display: flex; gap: 0.65rem; justify-content: center;">
+        <button type="button" class="cart-btn" id="confirm-btn-cancel" style="flex: 1; justify-content: center; padding: 0.65rem 1rem; border-color: var(--border); font-weight: 600;">
+          Để tôi xem lại
+        </button>
+        <button type="button" class="btn-buy" id="confirm-btn-ok" style="flex: 1; justify-content: center; padding: 0.65rem 1rem; font-weight: 700;">
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+      <p style="margin:0;">© 2026 JetJet Store — Kho tri thức &amp; tài liệu số của Nguyễn Song Hoàng Phúc (HCMUTE). Tự động bàn giao 24/7!</p>
+      <div style="display:flex; align-items:center; gap:1.25rem;">
+        <a href="#" id="link-footer-faq" style="color:var(--text-muted); font-size:0.8125rem; text-decoration:none;">Chính sách &amp; FAQ ↗</a>
+        <a href="#" id="link-footer-track" style="color:var(--text-muted); font-size:0.8125rem; text-decoration:none;">Tra cứu đơn hàng ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('jetjet_cart') || '[]');
+    let currentUser = null;
+    let pendingRegister = null;
+    let pendingForgotEmail = null;
+
+    // Custom Beautiful Confirm & Alert Dialog System
+    function showConfirmDialog({
+      title = 'Xác nhận thao tác',
+      message = '',
+      confirmText = 'Xác nhận',
+      cancelText = 'Hủy bỏ',
+      type = 'warning' // 'warning', 'danger', 'info', 'success'
+    } = {}) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('custom-confirm-modal');
+        const titleEl = document.getElementById('confirm-title');
+        const msgEl = document.getElementById('confirm-message');
+        const iconWrap = document.getElementById('confirm-icon-wrap');
+        const btnCancel = document.getElementById('confirm-btn-cancel');
+        const btnOk = document.getElementById('confirm-btn-ok');
+
+        titleEl.textContent = title;
+        msgEl.innerHTML = message;
+        btnCancel.textContent = cancelText;
+        btnOk.textContent = confirmText;
+
+        if (type === 'danger') {
+          iconWrap.style.background = '#fef2f2';
+          iconWrap.style.color = '#dc2626';
+          iconWrap.innerHTML = `<svg class="ui-icon" style="width:1.6rem;height:1.6rem;" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>`;
+          btnOk.style.background = '#dc2626';
+          btnOk.style.borderColor = '#dc2626';
+          btnOk.style.color = '#ffffff';
+        } else if (type === 'warning') {
+          iconWrap.style.background = '#fffbeb';
+          iconWrap.style.color = '#d97706';
+          iconWrap.innerHTML = `<svg class="ui-icon" style="width:1.6rem;height:1.6rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`;
+          btnOk.style.background = 'var(--black)';
+          btnOk.style.borderColor = 'var(--black)';
+          btnOk.style.color = '#ffffff';
+        } else {
+          iconWrap.style.background = '#f0fdf4';
+          iconWrap.style.color = '#16a34a';
+          iconWrap.innerHTML = `<svg class="ui-icon" style="width:1.6rem;height:1.6rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+          btnOk.style.background = 'var(--black)';
+          btnOk.style.borderColor = 'var(--black)';
+          btnOk.style.color = '#ffffff';
+        }
+
+        btnCancel.style.display = cancelText ? 'inline-flex' : 'none';
+
+        function cleanup(result) {
+          modal.classList.remove('open');
+          btnOk.removeEventListener('click', onOk);
+          btnCancel.removeEventListener('click', onCancel);
+          modal.removeEventListener('click', onBackdrop);
+          document.removeEventListener('keydown', onKeyDown);
+          resolve(result);
+        }
+        function onOk() { cleanup(true); }
+        function onCancel() { cleanup(false); }
+        function onBackdrop(e) { if (e.target === modal) cleanup(false); }
+        function onKeyDown(e) {
+          if (e.key === 'Escape') cleanup(false);
+          if (e.key === 'Enter') cleanup(true);
+        }
+
+        btnOk.addEventListener('click', onOk);
+        btnCancel.addEventListener('click', onCancel);
+        modal.addEventListener('click', onBackdrop);
+        document.addEventListener('keydown', onKeyDown);
+        modal.classList.add('open');
+      });
+    }
+
+    // Floating Non-blocking Toast System
+    function showToast(message, type = 'info') {
+      let container = document.getElementById('toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.className = 'app-toast';
+      
+      let iconSvg = '';
+      if (type === 'success') {
+        iconSvg = `<svg class="ui-icon" style="color:#16a34a; flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+      } else if (type === 'error') {
+        iconSvg = `<svg class="ui-icon" style="color:#dc2626; flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`;
+      } else {
+        iconSvg = `<svg class="ui-icon" style="color:var(--text-muted); flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>`;
+      }
+      toast.innerHTML = `${iconSvg}<span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px) scale(0.96)';
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    function saveCart() {
+      try {
+        localStorage.setItem('jetjet_cart', JSON.stringify(cart));
+      } catch (e) {
+        console.error('Cannot save cart to localStorage', e);
+      }
+    }
+
+    async function checkUserSession() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        const data = await res.json();
+        currentUser = data.loggedIn ? data.user : null;
+      } catch (e) {
+        currentUser = null;
+      }
+      renderAccountHeader();
+    }
+
+    async function quickLoginUser() {
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email: 'phuc@jetjet.store', password: '123456' })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Lỗi đăng nhập');
+        currentUser = data.user;
+        renderAccountHeader();
+        const userAuthModal = document.getElementById('user-auth-modal');
+        if (userAuthModal && userAuthModal.classList.contains('open')) {
+          userAuthModal.classList.remove('open');
+        }
+      } catch (err) {
+        showToast('Đăng nhập User thất bại: ' + err.message, 'error');
+      }
+    }
+
+    async function quickLoginAdmin() {
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ username: 'admin', password: 'phucdeptrai123' })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Lỗi đăng nhập');
+        window.location.href = '/admin.html';
+      } catch (err) {
+        showToast('Đăng nhập Admin thất bại: ' + err.message, 'error');
+      }
+    }
+
+    let notifPollTimer = null;
+
+    function timeAgo(dateStr) {
+      if (!dateStr) return '';
+      const diff = Math.max(0, Date.now() - new Date(dateStr).getTime());
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'Vừa xong';
+      if (mins < 60) return `${mins} phút trước`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs} giờ trước`;
+      return `${Math.floor(hrs / 24)} ngày trước`;
+    }
+
+    async function loadNotifications() {
+      if (!currentUser) return;
+      try {
+        const res = await fetch('/api/notifications', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const badge = document.getElementById('notif-badge');
+        const list = document.getElementById('notif-list');
+        const empty = document.getElementById('notif-empty');
+
+        if (badge) {
+          const unread = Number(data.unread_count) || 0;
+          if (unread > 0) {
+            badge.textContent = unread > 9 ? '9+' : unread;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+
+        if (!list || !empty) return;
+        const notifs = data.notifications || [];
+        if (notifs.length === 0) {
+          list.innerHTML = '';
+          empty.style.display = 'block';
+          return;
+        }
+        empty.style.display = 'none';
+
+        const typeIcons = {
+          order_paid: '💳',
+          order_delivered: '📦',
+          order_cancelled: '❌',
+          promo: '🏷️'
+        };
+
+        list.innerHTML = notifs.map(n => {
+          const icon = typeIcons[n.type] || '🔔';
+          const ago = timeAgo(n.created_at);
+          return `
+            <div class="notif-item ${n.is_read ? 'read' : 'unread'}" data-id="${n.id}">
+              <div class="notif-dot"></div>
+              <div style="flex:1;">
+                <div style="font-weight:700; font-size:0.825rem; color:var(--text);">${icon} ${escapeHtml(n.title)}</div>
+                <div style="color:var(--text-muted); font-size:0.775rem; margin-top:2px;">${escapeHtml(n.message || '')}</div>
+                <div class="notif-time">${ago}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        list.querySelectorAll('.notif-item').forEach(el => {
+          el.addEventListener('click', async () => {
+            if (el.classList.contains('unread')) {
+              try {
+                await fetch(`/api/notifications/${el.dataset.id}/read`, { method: 'PATCH', credentials: 'include' });
+                el.classList.remove('unread');
+                el.classList.add('read');
+                await loadNotifications();
+              } catch (err) {
+                console.error('Mark read error', err);
+              }
+            }
+          });
+        });
+      } catch (err) {
+        // silent
+      }
+    }
+
+    function startNotifPoll() {
+      if (notifPollTimer) {
+        clearInterval(notifPollTimer);
+        notifPollTimer = null;
+      }
+      const bellWrap = document.getElementById('notif-bell-wrap');
+      if (!currentUser) {
+        if (bellWrap) bellWrap.style.display = 'none';
+        const notifDd = document.getElementById('notif-dropdown');
+        if (notifDd) notifDd.style.display = 'none';
+        return;
+      }
+      if (bellWrap) bellWrap.style.display = 'block';
+      loadNotifications();
+      notifPollTimer = setInterval(loadNotifications, 30000);
+    }
+
+    function renderAccountHeader() {
+      const container = document.getElementById('account-header-container');
+      if (!container) return;
+
+      if (!currentUser) {
+        container.innerHTML = `
+          <a href="/login.html" class="cart-btn" id="btn-open-user-auth" style="text-decoration:none;">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Đăng nhập</span>
+          </a>
+        `;
+      } else {
+        const shortName = (currentUser.full_name || 'Bạn').trim().split(' ').pop();
+        const avatarElHtml = currentUser.avatar
+          ? `<img src="${currentUser.avatar}" style="width:1.15rem;height:1.15rem;border-radius:50%;object-fit:cover;flex-shrink:0;" />`
+          : `<svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+        container.innerHTML = `
+          <div style="position:relative;" id="account-dropdown-wrap">
+            <button class="cart-btn" id="btn-account-dropdown" style="gap:0.4rem;">
+              ${avatarElHtml}
+              <span>${escapeHtml(shortName)}</span>
+              <svg class="ui-icon" style="width:0.75rem;height:0.75rem;" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div id="account-dropdown-menu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-sm); min-width:180px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:999; overflow:hidden;">
+              <button class="dropdown-item" id="dd-profile">
+                <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Hồ sơ cá nhân</span>
+              </button>
+              <button class="dropdown-item" id="dd-orders">
+                <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                <span>Đơn hàng của tôi</span>
+              </button>
+              <button class="dropdown-item" id="dd-change-pw">
+                <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span>Đổi mật khẩu</span>
+              </button>
+              <hr style="margin:0; border:none; border-top:1px solid var(--border);">
+              <button class="dropdown-item" id="dd-logout" style="color:#dc2626;">
+                <svg class="ui-icon" style="width:0.95rem;height:0.95rem; color:#dc2626;" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                <span>Đăng xuất</span>
+              </button>
+            </div>
+          </div>
+        `;
+        const btnDd = document.getElementById('btn-account-dropdown');
+        const menuDd = document.getElementById('account-dropdown-menu');
+        if (btnDd && menuDd) {
+          btnDd.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDd.style.display = menuDd.style.display === 'none' ? 'block' : 'none';
+          });
+        }
+        const ddProfile = document.getElementById('dd-profile');
+        if (ddProfile) {
+          ddProfile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDd) menuDd.style.display = 'none';
+            openProfileModal();
+          });
+        }
+        const ddOrders = document.getElementById('dd-orders');
+        if (ddOrders) {
+          ddOrders.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDd) menuDd.style.display = 'none';
+            openMyOrdersModal();
+          });
+        }
+        const ddChangePw = document.getElementById('dd-change-pw');
+        if (ddChangePw) {
+          ddChangePw.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDd) menuDd.style.display = 'none';
+            openProfileModal('tab-prof-security');
+          });
+        }
+        const ddLogout = document.getElementById('dd-logout');
+        if (ddLogout) {
+          ddLogout.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDd) menuDd.style.display = 'none';
+            handleUserLogout();
+          });
+        }
+      }
+      startNotifPoll();
+    }
+
+    async function handleUserLogout() {
+      const confirmed = await showConfirmDialog({
+        title: 'Đăng xuất tài khoản',
+        message: 'Quý khách có chắc chắn muốn đăng xuất khỏi tài khoản không?',
+        confirmText: 'Đăng xuất',
+        cancelText: 'Hủy',
+        type: 'warning'
+      });
+      if (!confirmed) return;
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        showToast('Đã đăng xuất tài khoản thành công!', 'info');
+      } catch (e) {
+        console.error('Logout error', e);
+      }
+      currentUser = null;
+      renderAccountHeader();
+      const myOrdersModal = document.getElementById('my-orders-modal');
+      if (myOrdersModal && myOrdersModal.classList.contains('open')) {
+        myOrdersModal.classList.remove('open');
+      }
+      const profileModal = document.getElementById('profile-modal');
+      if (profileModal && profileModal.classList.contains('open')) {
+        profileModal.classList.remove('open');
+      }
+      const changePwModal = document.getElementById('change-pw-modal');
+      if (changePwModal && changePwModal.classList.contains('open')) {
+        changePwModal.classList.remove('open');
+      }
+      if (modal && modal.classList.contains('open')) {
+        updateCheckoutAuthBadge();
+      }
+    }
+
+    let activeCategory = 'all';
+    let currentDetailProduct = null;
+    let detailModalQty = 1;
+    let qrPollingInterval = null;
+    let qrCountdownInterval = null;
+    let activePollingOrderCode = null;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Load products from API
+    async function init() {
+      updateCart();
+      await checkUserSession();
+      try {
+        const res = await fetch('/api/products');
+        products = await res.json();
+        filterAndSortProducts();
+      } catch (e) {
+        document.getElementById('grid-container').innerHTML = '<p style="color:red; text-align:center;">Hổng kết nối được với server rồi bà con ơi!</p>';
+      }
+    }
+
+    // Filter & Sort
+    function filterAndSortProducts() {
+      const searchInput = document.getElementById('search-input');
+      const sortSelect = document.getElementById('sort-select');
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      const sortMode = sortSelect?.value || 'default';
+
+      let list = products.filter(p => {
+        const matchCat = activeCategory === 'all' || p.category === activeCategory;
+        if (!matchCat) return false;
+        if (!query) return true;
+        const nameMatch = (p.name || '').toLowerCase().includes(query);
+        const descMatch = (p.description || '').toLowerCase().includes(query);
+        const featMatch = Array.isArray(p.features) && p.features.some(f => (f || '').toLowerCase().includes(query));
+        return nameMatch || descMatch || featMatch;
+      });
+
+      if (sortMode === 'price-asc') {
+        list.sort((a, b) => a.price - b.price);
+      } else if (sortMode === 'price-desc') {
+        list.sort((a, b) => b.price - a.price);
+      } else if (sortMode === 'name-asc') {
+        list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'vi'));
+      }
+
+      render(list);
+    }
+
+    // Render list
+    function render(list) {
+      const container = document.getElementById('grid-container');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-subtle);">Hổng có món nào hết trơn á!</p>';
+        return;
+      }
+
+      container.innerHTML = list.map(p => {
+        let stockHtml = '';
+        let buyBtnHtml = `
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <button class="btn-buy" style="padding:0.45rem 0.85rem; font-size:0.8rem; font-weight:700;" onclick="buyNow(${p.id})">⚡ Mua ngay</button>
+            <button class="cart-btn" style="padding:0.45rem 0.55rem;" onclick="addToCart(${p.id}, false)" title="Thêm vào giỏ hàng">
+              <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </button>
+          </div>
+        `;
+
+        if (p.stock <= 0) {
+          stockHtml = `<span style="color:#dc2626;font-size:0.75rem;font-weight:700;">Tạm hết hàng</span>`;
+          buyBtnHtml = `<button class="btn-buy" disabled style="opacity:0.4;cursor:not-allowed;padding:0.45rem 0.85rem;font-size:0.8rem;">Hết hàng</button>`;
+        } else if (p.stock <= 3 && p.stock > 0) {
+          stockHtml = `<span style="color:#d97706;font-size:0.75rem;font-weight:600;">Còn ${p.stock} suất!</span>`;
+        }
+
+        return `
+        <article class="product-card">
+          <div class="card-top" onclick="openProductDetail(${p.id})" style="cursor:pointer;" title="Nhấn xem chi tiết ${p.name}">
+            <div class="card-head-row">
+              <div class="card-icon-wrap">
+                ${p.image ? `<img src="${p.image}" alt="${p.name}" class="card-icon-img" />` : '<div style="font-weight:800; font-size:1.1rem;">⚡</div>'}
+              </div>
+              <div class="card-badges-wrap">
+                ${p.category === 'Khóa học & Tài liệu số' ? '<span class="card-badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">⚡ Link tức thì</span>' : ''}
+                ${p.category === 'Combo AI + Khóa học' ? '<span class="card-badge" style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa;">🎁 Kèm Khóa học</span>' : ''}
+                ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
+                <span class="card-cat">${p.category}</span>
+              </div>
+            </div>
+            <h3 class="card-name">${p.name}</h3>
+            <p class="card-desc">${p.description}</p>
+            <ul class="card-features">
+              ${p.features.map(f => `
+                <li class="feature-item">
+                  <span class="feature-bullet">•</span>
+                  <span>${f}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          <div class="card-bottom">
+            <div class="price-wrap">
+              <span class="price-value">${p.price.toLocaleString('vi-VN')}đ</span>
+              <span class="price-duration">Thời hạn: ${p.duration}</span>
+              ${stockHtml}
+            </div>
+            ${buyBtnHtml}
+          </div>
+        </article>
+      `}).join('');
+    }
+
+    // Filter & Toolbar Listeners
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.dataset.cat || 'all';
+        filterAndSortProducts();
+      });
+    });
+
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.addEventListener('input', filterAndSortProducts);
+
+    // Custom Sort Dropdown Logic
+    const btnSortTrigger = document.getElementById('btn-sort-trigger');
+    const sortMenu = document.getElementById('sort-menu');
+    const sortCurrentLabel = document.getElementById('sort-current-label');
+    const sortSelectInput = document.getElementById('sort-select');
+
+    if (btnSortTrigger && sortMenu) {
+      btnSortTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+      });
+    }
+
+    document.querySelectorAll('.sort-option-item').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const val = opt.dataset.val || 'default';
+        if (sortSelectInput) sortSelectInput.value = val;
+        if (sortCurrentLabel) {
+          const labelSpan = opt.querySelector('span:first-child');
+          if (labelSpan) sortCurrentLabel.textContent = labelSpan.textContent;
+        }
+        document.querySelectorAll('.sort-option-item').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        if (sortMenu) sortMenu.style.display = 'none';
+        filterAndSortProducts();
+      });
+    });
+
+    // Product Detail Modal Logic
+    const productDetailModal = document.getElementById('product-detail-modal');
+    const btnCloseProductDetail = document.getElementById('btn-close-product-detail');
+    const modalQtyMinus = document.getElementById('modal-qty-minus');
+    const modalQtyPlus = document.getElementById('modal-qty-plus');
+    const modalBtnAddCart = document.getElementById('modal-btn-add-cart');
+
+    function openProductDetail(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      currentDetailProduct = p;
+      detailModalQty = 1;
+
+      const iconWrap = document.getElementById('modal-p-icon-wrap');
+      if (iconWrap) {
+        iconWrap.innerHTML = p.image 
+          ? `<img src="${p.image}" alt="${p.name}" class="card-icon-img" style="width:2.5rem; height:2.5rem;" />` 
+          : '<div style="font-weight:800; font-size:1.4rem;">⚡</div>';
+      }
+      const catEl = document.getElementById('modal-p-cat');
+      if (catEl) catEl.textContent = p.category || '';
+      const badgeEl = document.getElementById('modal-p-badge');
+      if (badgeEl) {
+        if (p.badge) {
+          badgeEl.textContent = p.badge;
+          badgeEl.style.display = 'inline-block';
+        } else {
+          badgeEl.style.display = 'none';
+        }
+      }
+      const nameEl = document.getElementById('modal-p-name');
+      if (nameEl) nameEl.textContent = p.name || '';
+      const priceEl = document.getElementById('modal-p-price');
+      if (priceEl) priceEl.textContent = (p.price || 0).toLocaleString('vi-VN') + 'đ';
+      const durEl = document.getElementById('modal-p-duration');
+      if (durEl) durEl.textContent = 'Thời hạn: ' + (p.duration || '—');
+
+      const stockEl = document.getElementById('modal-p-stock');
+      const addBtn = document.getElementById('modal-btn-add-cart');
+      if (p.stock <= 0) {
+        if (stockEl) stockEl.innerHTML = '<span style="color:#dc2626; font-size:0.8rem; font-weight:700;">Hết hàng rồi bà con ơi!</span>';
+        if (addBtn) {
+          addBtn.disabled = true;
+          addBtn.textContent = 'Hết hàng tạm thời';
+          addBtn.style.opacity = '0.4';
+          addBtn.style.cursor = 'not-allowed';
+        }
+      } else {
+        if (stockEl) {
+          stockEl.innerHTML = p.stock <= 3 
+            ? `<span style="color:#d97706; font-size:0.8rem; font-weight:600;">Còn ${p.stock} món</span>`
+            : `<span style="color:#15803d; font-size:0.8rem; font-weight:600;">Còn hàng (${p.stock})</span>`;
+        }
+        if (addBtn) {
+          addBtn.disabled = false;
+          addBtn.textContent = '+ Thêm vào giỏ hàng';
+          addBtn.style.opacity = '1';
+          addBtn.style.cursor = 'pointer';
+        }
+      }
+
+      const descEl = document.getElementById('modal-p-desc');
+      if (descEl) descEl.textContent = p.description || '';
+
+      const featEl = document.getElementById('modal-p-features');
+      if (featEl) {
+        if (p.features && p.features.length) {
+          featEl.innerHTML = p.features.map(f => `
+            <li class="feature-item" style="font-size:0.825rem; color:var(--text);">
+              <span class="feature-bullet" style="color:var(--black);">✓</span>
+              <span>${f}</span>
+            </li>
+          `).join('');
+        } else {
+          featEl.innerHTML = '';
+        }
+      }
+
+      const guarEl = document.getElementById('modal-p-guarantee');
+      if (guarEl) {
+        if (p.category === 'Combo AI + Khóa học') {
+          guarEl.innerHTML = `
+            <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--radius-sm); padding:0.9rem 1rem; font-size:0.8125rem; color:#c2410c; line-height:1.55;">
+              <div style="font-weight:700; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem;">
+                <svg class="ui-icon" style="width:1rem;height:1rem;stroke:#c2410c;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Đặc quyền Gói Combo Siêu Tiết Kiệm:</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                <div>• <strong>Khóa học & Tài liệu số:</strong> Nhận link Google Drive tức thì sau khi quét mã VietQR.</div>
+                <div>• <strong>Tài khoản AI chính chủ:</strong> Kích hoạt và gửi thông tin đăng nhập trong 5-15 phút.</div>
+                <div>• <strong>Bảo hành 1 đổi 1:</strong> Cam kết bảo hành uy tín suốt thời hạn tài khoản.</div>
+              </div>
+            </div>`;
+        } else {
+          guarEl.innerHTML = `
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-sm); padding:0.9rem 1rem; font-size:0.8125rem; color:#166534; line-height:1.55;">
+              <div style="font-weight:700; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem;">
+                <svg class="ui-icon" style="width:1rem;height:1rem;stroke:#166534;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Cam kết chất lượng & Bàn giao tài liệu tự động:</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                <div>• <strong>Nhận link Google Drive tức thì</strong> ngay sau khi thanh toán thành công (Zero-Touch).</div>
+                <div>• <strong>Sở hữu vĩnh viễn</strong>, xem trực tuyến và tải video/source code về máy thoải mái.</div>
+                <div>• <strong>Cập nhật miễn phí</strong> khi giáo trình có thêm bài giảng hoặc tài liệu mới.</div>
+              </div>
+            </div>`;
+        }
+      }
+
+      updateDetailModalQty();
+      if (productDetailModal) productDetailModal.classList.add('open');
+    }
+
+    function updateDetailModalQty() {
+      const qtyValEl = document.getElementById('modal-qty-val');
+      if (qtyValEl) qtyValEl.textContent = detailModalQty;
+    }
+
+    function changeDetailModalQty(delta) {
+      if (!currentDetailProduct) return;
+      const maxStock = currentDetailProduct.stock || 1;
+      const next = detailModalQty + delta;
+      if (next >= 1 && next <= maxStock) {
+        detailModalQty = next;
+        updateDetailModalQty();
+      }
+    }
+
+    function closeProductDetailModal() {
+      if (productDetailModal) productDetailModal.classList.remove('open');
+      currentDetailProduct = null;
+    }
+
+    const modalBtnBuyNow = document.getElementById('modal-btn-buy-now');
+    if (modalBtnBuyNow) {
+      modalBtnBuyNow.addEventListener('click', () => {
+        if (!currentDetailProduct) return;
+        const pId = currentDetailProduct.id;
+        closeProductDetailModal();
+        buyNow(pId);
+      });
+    }
+
+    if (modalBtnAddCart) {
+      modalBtnAddCart.addEventListener('click', () => {
+        if (!currentDetailProduct) return;
+        const pId = currentDetailProduct.id;
+        addToCart(pId, false);
+        closeProductDetailModal();
+      });
+    }
+
+    if (btnCloseProductDetail) btnCloseProductDetail.addEventListener('click', closeProductDetailModal);
+    if (productDetailModal) {
+      productDetailModal.addEventListener('click', (e) => {
+        if (e.target === productDetailModal) closeProductDetailModal();
+      });
+    }
+
+    // Cart actions
+    let activeCheckoutItems = null;
+
+    function addToCart(id, openDrawer = true) {
+      const p = products.find(x => x.id === id);
+      if (!p || p.stock <= 0) return;
+      const exist = cart.find(x => x.id === id);
+      if (exist) {
+        if (p.category === 'Khóa học & Tài liệu số' || p.is_digital) {
+          exist.quantity = 1;
+          showToast('Khóa học này đã có trong giỏ hàng rồi nha!', 'info');
+        } else {
+          exist.quantity++;
+          showToast(`Đã thêm 1 suất "${p.name}" vào giỏ hàng!`, 'success');
+        }
+      } else {
+        cart.push({ ...p, quantity: 1 });
+        showToast(`Đã thêm "${p.name}" vào giỏ hàng!`, 'success');
+      }
+      saveCart();
+      updateCart();
+      if (openDrawer) openCart();
+    }
+
+    function buyNow(id) {
+      const p = products.find(x => x.id === id);
+      if (!p || p.stock <= 0) return;
+      activeCheckoutItems = [{ ...p, quantity: 1 }];
+      openCheckout(activeCheckoutItems);
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(x => x.id !== id);
+      saveCart();
+      updateCart();
+      showToast('Đã gỡ sản phẩm khỏi giỏ hàng', 'info');
+    }
+
+    function updateCart() {
+      const badge = document.getElementById('cart-count-badge');
+      const totalCount = cart.reduce((s, i) => s + i.quantity, 0);
+      badge.textContent = totalCount;
+
+      const body = document.getElementById('cart-body');
+      const totalEl = document.getElementById('drawer-total');
+      const btnCheckout = document.getElementById('btn-checkout-start');
+
+      if (cart.length === 0) {
+        body.innerHTML = `
+          <div style="text-align:center; padding:3.5rem 1.5rem; color:var(--text-muted);">
+            <svg class="ui-icon" style="width:3rem;height:3rem;margin-bottom:0.75rem;color:var(--text-subtle);" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng của bạn đang trống</div>
+            <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp để thêm vào giỏ nhé!</div>
+          </div>
+        `;
+        totalEl.textContent = '0đ';
+        if (btnCheckout) {
+          btnCheckout.disabled = true;
+          btnCheckout.style.opacity = '0.45';
+          btnCheckout.style.cursor = 'not-allowed';
+        }
+        return;
+      }
+
+      if (btnCheckout) {
+        btnCheckout.disabled = false;
+        btnCheckout.style.opacity = '1';
+        btnCheckout.style.cursor = 'pointer';
+      }
+
+      const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+      totalEl.textContent = total.toLocaleString('vi-VN') + 'đ';
+
+      body.innerHTML = cart.map(item => {
+        const isDigitalCourse = item.category === 'Khóa học & Tài liệu số' || item.is_digital;
+        const rightControls = isDigitalCourse ? `
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <span style="font-size:0.75rem; color:var(--text-subtle); font-weight:600; background:var(--surface); padding:0.2rem 0.5rem; border-radius:var(--radius-pill); border:1px solid var(--border);">1 bản số</span>
+            <button class="btn-step" onclick="removeFromCart(${item.id})" title="Xóa món này" style="color:#dc2626; border-color:#fecaca;">✕</button>
+          </div>
+        ` : `
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <div class="qty-controls">
+              <button class="btn-step" onclick="changeQty(${item.id}, -1)">-</button>
+              <span style="font-weight:600; font-size:0.8125rem; min-width:1rem; text-align:center;">${item.quantity}</span>
+              <button class="btn-step" onclick="changeQty(${item.id}, 1)">+</button>
+            </div>
+            <button class="btn-step" onclick="removeFromCart(${item.id})" title="Xóa món này" style="color:#dc2626; border-color:#fecaca;">✕</button>
+          </div>
+        `;
+
+        return `
+          <div class="cart-row" style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border);">
+            <div style="flex:1; padding-right:0.75rem;">
+              <div class="cart-row-title" style="font-weight:600; font-size:0.85rem; color:var(--text); line-height:1.4;">${escapeHtml(item.name)}</div>
+              <div class="cart-row-price" style="font-size:0.8125rem; color:var(--text-muted); font-weight:700;">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</div>
+            </div>
+            ${rightControls}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function changeQty(id, delta) {
+      const it = cart.find(x => x.id === id);
+      if (!it) return;
+      it.quantity += delta;
+      if (it.quantity <= 0) cart = cart.filter(x => x.id !== id);
+      saveCart();
+      updateCart();
+    }
+
+    // Drawer triggers
+    const cartBackdrop = document.getElementById('cart-backdrop');
+    function openCart() { cartBackdrop.classList.add('open'); }
+    function closeCart() { cartBackdrop.classList.remove('open'); }
+    document.getElementById('btn-open-cart').addEventListener('click', openCart);
+    document.getElementById('btn-close-cart').addEventListener('click', closeCart);
+    cartBackdrop.addEventListener('click', (e) => { if (e.target === cartBackdrop) closeCart(); });
+
+    const btnClearCart = document.getElementById('btn-clear-cart');
+    if (btnClearCart) {
+      btnClearCart.addEventListener('click', () => {
+        if (cart.length === 0) return;
+        cart = [];
+        saveCart();
+        updateCart();
+        showToast('Đã xóa sạch giỏ hàng!', 'info');
+      });
+    }
+
+    // Checkout modal
+    const modal = document.getElementById('modal-backdrop');
+    const form = document.getElementById('checkout-form');
+    const qrWrap = document.getElementById('qr-wrap');
+
+    function openCheckout(customItems = null) {
+      const itemsToBuy = customItems || cart;
+      if (!itemsToBuy || itemsToBuy.length === 0) {
+        showToast('Vui lòng chọn sản phẩm trước khi thanh toán!', 'error');
+        return;
+      }
+      closeCart();
+
+      const summaryEl = document.getElementById('checkout-items-summary');
+      if (summaryEl) {
+        summaryEl.innerHTML = itemsToBuy.map(item => `
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.825rem;">
+            <span style="font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:18rem;">${escapeHtml(item.name)} <span style="color:var(--text-subtle);">x${item.quantity}</span></span>
+            <span style="font-weight:700; color:var(--black); flex-shrink:0;">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</span>
+          </div>
+        `).join('');
+      }
+
+      const total = itemsToBuy.reduce((s, i) => s + (i.price * i.quantity), 0);
+      const sumEl = document.getElementById('checkout-sum');
+      if (sumEl) sumEl.textContent = total.toLocaleString('vi-VN') + 'đ';
+
+      const userBox = document.getElementById('checkout-user-box');
+      const guestBox = document.getElementById('checkout-guest-box');
+
+      if (currentUser) {
+        if (userBox) userBox.style.display = 'block';
+        if (guestBox) guestBox.style.display = 'none';
+        const dispName = document.getElementById('checkout-display-name');
+        const dispEmail = document.getElementById('checkout-display-email');
+        if (dispName) dispName.textContent = currentUser.full_name || 'Học viên JetJet';
+        if (dispEmail) dispEmail.textContent = currentUser.email || '';
+      } else {
+        if (userBox) userBox.style.display = 'none';
+        if (guestBox) guestBox.style.display = 'block';
+      }
+
+      form.style.display = 'block';
+      qrWrap.style.display = 'none';
+      document.getElementById('modal-heading').textContent = 'Xác nhận đơn hàng';
+      modal.classList.add('open');
+    }
+
+    document.getElementById('btn-checkout-start').addEventListener('click', () => {
+      activeCheckoutItems = null;
+      openCheckout(cart);
+    });
+
+    function stopQrPolling() {
+      if (qrPollingInterval) {
+        clearInterval(qrPollingInterval);
+        qrPollingInterval = null;
+      }
+      if (qrCountdownInterval) {
+        clearInterval(qrCountdownInterval);
+        qrCountdownInterval = null;
+      }
+    }
+
+    function startQrPolling(orderCode) {
+      stopQrPolling();
+      activePollingOrderCode = orderCode;
+
+      const normalQrContent = document.getElementById('qr-normal-content');
+      const paidSuccessContent = document.getElementById('qr-paid-success');
+      if (normalQrContent) normalQrContent.style.display = 'flex';
+      if (paidSuccessContent) paidSuccessContent.style.display = 'none';
+
+      let remaining = 15 * 60;
+      const countdownEl = document.getElementById('qr-countdown');
+      function updateCountdownDisplay() {
+        if (!countdownEl) return;
+        const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+        const s = (remaining % 60).toString().padStart(2, '0');
+        countdownEl.textContent = `${m}:${s}`;
+      }
+      updateCountdownDisplay();
+
+      qrCountdownInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          stopQrPolling();
+          if (countdownEl) countdownEl.textContent = '00:00 (Hết hạn)';
+        } else {
+          updateCountdownDisplay();
+        }
+      }, 1000);
+
+      qrPollingInterval = setInterval(async () => {
+        if (!activePollingOrderCode) return;
+        try {
+          const res = await fetch(`/api/orders/${encodeURIComponent(orderCode)}/status`);
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.paid === true) {
+            stopQrPolling();
+            showQrPaidCelebration(orderCode);
+          }
+        } catch (e) {
+          console.warn('Polling error:', e);
+        }
+      }, 4000);
+    }
+
+    async function showQrPaidCelebration(orderCode) {
+      const normalQrContent = document.getElementById('qr-normal-content');
+      const paidSuccessContent = document.getElementById('qr-paid-success');
+      if (normalQrContent) normalQrContent.style.display = 'none';
+      if (paidSuccessContent) paidSuccessContent.style.display = 'flex';
+      const heading = document.getElementById('modal-heading');
+      if (heading) heading.innerHTML = '<span style="color:#15803d;">Thanh toán thành công 🎉</span>';
+
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(orderCode)}`);
+        if (res.ok) {
+          const order = await res.json();
+          const driveWrap = document.getElementById('qr-paid-drive-link');
+          const descEl = document.getElementById('qr-paid-desc');
+          if (driveWrap && order.delivery_data) {
+            const driveMatch = order.delivery_data.match(/https:\/\/(?:drive\.google\.com\/[^\s\n]+|docs\.google\.com\/[^\s\n]+)/);
+            const driveUrl = driveMatch ? driveMatch[0] : null;
+            if (driveUrl) {
+              driveWrap.style.display = 'block';
+              driveWrap.innerHTML = `
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-solid-black" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.8rem 1.4rem; text-decoration:none; font-weight:700; width:100%; box-sizing:border-box; border-radius:var(--radius-sm); margin-bottom:0.5rem;">
+                  <svg class="ui-icon" style="width:1rem;height:1rem;stroke:#fff;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  <span>Mở Google Drive Học Ngay ↗</span>
+                </a>
+              `;
+              if (descEl) descEl.textContent = 'Link Google Drive của bạn đã sẵn sàng! Nhấn nút bên dưới để mở bài giảng ngay:';
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Error fetching order on celebration:', e);
+      }
+    }
+
+    const btnViewPaidOrder = document.getElementById('btn-view-paid-order');
+    if (btnViewPaidOrder) {
+      btnViewPaidOrder.addEventListener('click', () => {
+        const code = activePollingOrderCode || document.getElementById('order-code-display')?.textContent || '';
+        stopQrPolling();
+        modal.classList.remove('open');
+        if (currentUser) {
+          openMyOrdersModal();
+        } else {
+          openTrack();
+          if (trackInput && code) {
+            trackInput.value = code;
+            trackOrder();
+          }
+        }
+      });
+    }
+
+    async function copyDeliveryData(btn, text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        const origText = btn.innerHTML;
+        btn.innerHTML = '✓ Đã sao chép!';
+        btn.style.background = '#166534';
+        setTimeout(() => {
+          btn.innerHTML = origText;
+          btn.style.background = '';
+        }, 2500);
+      } catch (err) {
+        showToast('Không thể sao chép: ' + err.message, 'error');
+      }
+    }
+
+    async function cancelPendingOrder(orderCode) {
+      const confirmed = await showConfirmDialog({
+        title: 'Hủy đơn hàng',
+        message: `Quý khách có chắc chắn muốn hủy đơn hàng <strong>${orderCode}</strong> không?<br><span style="font-size:0.8rem; color:var(--text-subtle); display:block; margin-top:0.35rem;">Số lượng sản phẩm sẽ được hoàn lại vào kho của tiệm ngay lập tức.</span>`,
+        confirmText: 'Xác nhận hủy đơn',
+        cancelText: 'Để tôi xem lại',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(orderCode)}/cancel`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Lỗi khi hủy đơn');
+        showToast(data.message || 'Đã hủy đơn hàng thành công!', 'success');
+        if (trackModal.classList.contains('open')) {
+          trackOrder();
+        }
+        if (myOrdersModal.classList.contains('open')) {
+          loadMyOrders();
+        }
+      } catch (err) {
+        showToast('Hủy đơn thất bại: ' + err.message, 'error');
+      }
+    }
+
+    function renderDeliverySection(order) {
+      let html = '';
+      if ((order.status === 'completed' || order.status === 'processing') && order.delivery_data) {
+        const driveMatch = order.delivery_data.match(/https:\/\/(?:drive\.google\.com\/[^\s\n]+|docs\.google\.com\/[^\s\n]+)/);
+        const driveUrl = driveMatch ? driveMatch[0] : null;
+
+        const isComboProcessing = order.status === 'processing';
+        const titleText = isComboProcessing 
+          ? '🎁 Đã bàn giao trước khóa học (Đang kích hoạt tài khoản AI):' 
+          : '🎓 Link học & Tài liệu bàn giao:';
+
+        html += `
+          <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:var(--radius-sm); padding:0.85rem; margin-top:0.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; gap:0.5rem; flex-wrap:wrap;">
+              <strong style="color:#166534; font-size:0.8125rem;">${titleText}</strong>
+              <button class="btn-copy-delivery" type="button" onclick="const pre = this.closest('div').parentElement.querySelector('pre'); copyDeliveryData(this, pre ? pre.textContent : '');">
+                📋 Sao chép nội dung
+              </button>
+            </div>
+            ${driveUrl ? `
+              <div style="margin-bottom:0.6rem;">
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-solid-black" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 0.9rem; font-size:0.8125rem; text-decoration:none; border-radius:var(--radius-sm);">
+                  <svg class="ui-icon" style="width:0.9rem;height:0.9rem;stroke:#fff;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  <span>Mở Google Drive Học Ngay ↗</span>
+                </a>
+              </div>
+            ` : ''}
+            <pre class="delivery-box" style="margin:0;">${escapeHtml(order.delivery_data)}</pre>
+          </div>
+        `;
+      }
+      if (order.status === 'pending') {
+        html += `
+          <div style="margin-top:0.75rem; display:flex; justify-content:flex-end;">
+            <button class="btn-cancel-order" type="button" onclick="cancelPendingOrder('${order.order_code}')">
+              ✕ Hủy đơn hàng
+            </button>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => {
+      stopQrPolling();
+      modal.classList.remove('open');
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        stopQrPolling();
+        modal.classList.remove('open');
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-order');
+      btn.disabled = true;
+
+      let custName = 'Học viên JetJet';
+      let custEmail = '';
+
+      if (currentUser) {
+        custName = currentUser.full_name || 'Học viên JetJet';
+        custEmail = currentUser.email || '';
+      } else {
+        const guestEmailInput = document.getElementById('c-guest-email');
+        const guestNameInput = document.getElementById('c-guest-name');
+        custEmail = (guestEmailInput ? guestEmailInput.value : '').trim();
+        custName = (guestNameInput && guestNameInput.value.trim()) ? guestNameInput.value.trim() : 'Học viên JetJet';
+
+        if (!custEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(custEmail)) {
+          showToast('Vui lòng nhập địa chỉ Gmail hợp lệ để nhận link Drive!', 'error');
+          btn.disabled = false;
+          if (guestEmailInput) guestEmailInput.focus();
+          return;
+        }
+      }
+
+      const cNotesEl = document.getElementById('c-notes');
+      const itemsToOrder = activeCheckoutItems || cart;
+      if (!itemsToOrder || itemsToOrder.length === 0) {
+        showToast('Giỏ hàng đang trống!', 'error');
+        btn.disabled = false;
+        return;
+      }
+
+      const payload = {
+        customer_name: custName,
+        customer_email: custEmail,
+        customer_phone: '',
+        notes: cNotesEl ? cNotesEl.value : '',
+        items: itemsToOrder
+      };
+
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Lỗi đặt hàng');
+
+        form.style.display = 'none';
+        qrWrap.style.display = 'flex';
+        document.getElementById('modal-heading').textContent = `Đơn hàng ${data.order_code}`;
+        document.getElementById('order-code-display').textContent = data.order_code;
+        document.getElementById('qr-code-img').src = data.payment.qrUrl;
+        document.getElementById('t-bank').textContent = data.payment.bankName;
+        document.getElementById('t-acc').textContent = data.payment.accountNumber;
+        document.getElementById('t-amount').textContent = data.payment.amount.toLocaleString('vi-VN') + 'đ';
+        document.getElementById('t-content').textContent = data.payment.content;
+
+        startQrPolling(data.order_code);
+
+        if (activeCheckoutItems) {
+          activeCheckoutItems = null;
+        } else {
+          cart = [];
+          saveCart();
+          updateCart();
+        }
+      } catch (err) {
+        showToast('Có lỗi xảy ra: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('btn-done').addEventListener('click', () => {
+      stopQrPolling();
+      modal.classList.remove('open');
+    });
+
+    // Order tracking modal
+    const trackModal = document.getElementById('track-modal');
+    const trackInput = document.getElementById('track-input');
+    const trackBtn = document.getElementById('btn-track');
+    const trackCloseBtn = document.getElementById('btn-close-track');
+    const trackSubmitBtn = document.getElementById('btn-track-submit');
+    const trackResult = document.getElementById('track-result');
+
+    function openTrack() {
+      trackModal.classList.add('open');
+      trackInput.focus();
+    }
+    function closeTrack() {
+      trackModal.classList.remove('open');
+    }
+
+    if (trackBtn) trackBtn.addEventListener('click', openTrack);
+    const linkFooterTrack = document.getElementById('link-footer-track');
+    if (linkFooterTrack) linkFooterTrack.addEventListener('click', (e) => { e.preventDefault(); openTrack(); });
+    trackCloseBtn.addEventListener('click', closeTrack);
+    trackModal.addEventListener('click', (e) => { if (e.target === trackModal) closeTrack(); });
+
+    const statusMap = {
+      pending: 'Chờ chuyển khoản',
+      paid: 'Đã nhận tiền',
+      processing: 'Đang xử lý',
+      completed: 'Đã hoàn thành',
+      cancelled: 'Đã hủy'
+    };
+
+    async function trackOrder() {
+      const code = (trackInput.value || '').trim().toUpperCase();
+      if (!code) {
+        trackResult.innerHTML = '<div style="color:#dc2626; padding:0.5rem 0;">Vui lòng nhập mã đơn hàng (VD: JJ26110401) nha bà con!</div>';
+        return;
+      }
+
+      trackResult.innerHTML = '<div style="color:var(--text-muted); padding:0.5rem 0;">Đang tra cứu đơn cho bà con, chờ xíu nghen...</div>';
+
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(code)}`);
+        const data = await res.json();
+        if (!res.ok) {
+          trackResult.innerHTML = `<div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:0.875rem; border-radius:var(--radius-sm); font-size:0.85rem;">${data.error || 'Hổng tìm thấy đơn hàng này rồi bà con ơi!'}</div>`;
+          return;
+        }
+
+        const statusLabel = statusMap[data.status] || data.status;
+        const createdAt = data.created_at ? new Date(data.created_at).toLocaleString('vi-VN') : '—';
+        const totalPrice = Number(data.total_price || 0).toLocaleString('vi-VN') + 'đ';
+
+        trackResult.innerHTML = `
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; display:flex; flex-direction:column; gap:0.6rem;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+              <span style="font-weight:800; font-size:1rem; color:var(--black); font-family:monospace;">${data.order_code}</span>
+              <span style="font-weight:700; font-size:0.85rem;">${statusLabel}</span>
+            </div>
+            <div style="font-size:0.825rem; color:var(--text-muted); display:flex; flex-direction:column; gap:0.3rem;">
+              <div><strong style="color:var(--text);">Khách hàng:</strong> ${data.customer_name || '—'}</div>
+              <div><strong style="color:var(--text);">Ngày đặt:</strong> ${createdAt}</div>
+              <div><strong style="color:var(--text);">Tổng thiệt hại:</strong> <span style="font-weight:800; color:var(--black); font-size:0.95rem;">${totalPrice}</span></div>
+            </div>
+            ${data.items && data.items.length ? `
+              <div style="margin-top:0.35rem; border-top:1px solid var(--border); padding-top:0.6rem;">
+                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-subtle); margin-bottom:0.4rem;">Chi tiết món đồ:</div>
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem; padding-left:0;">
+                  ${data.items.map(it => `
+                    <li style="display:flex; justify-content:space-between; font-size:0.8125rem;">
+                      <span>• ${it.product_name} <span style="color:var(--text-subtle);">x${it.quantity}</span></span>
+                      <span style="font-weight:600; color:var(--black);">${(it.price * it.quantity).toLocaleString('vi-VN')}đ</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
+            ${renderDeliverySection(data)}
+          </div>
+        `;
+      } catch (err) {
+        trackResult.innerHTML = `<div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:0.875rem; border-radius:var(--radius-sm); font-size:0.85rem;">Có trục trặc đường truyền rồi bà con ơi: ${err.message}</div>`;
+      }
+    }
+
+    trackSubmitBtn.addEventListener('click', trackOrder);
+    trackInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        trackOrder();
+      }
+    });
+
+    // ----------------------------------------------------
+    // User Auth Modal Logic
+    // ----------------------------------------------------
+    const userAuthModal = document.getElementById('user-auth-modal');
+    const btnCloseUserAuth = document.getElementById('btn-close-user-auth');
+
+    function openUserAuthModal(tab = 'login') {
+      window.location.href = `/login.html#${tab}`;
+    }
+
+    function closeUserAuthModal() {
+      userAuthModal.classList.remove('open');
+      clearAuthMessage();
+    }
+
+    if (btnCloseUserAuth) btnCloseUserAuth.addEventListener('click', closeUserAuthModal);
+    if (userAuthModal) {
+      userAuthModal.addEventListener('click', (e) => {
+        if (e.target === userAuthModal) closeUserAuthModal();
+      });
+    }
+
+    function showAuthMessage(msg, isError = false) {
+      const box = document.getElementById('auth-msg-box');
+      if (!box) return;
+      box.style.display = 'block';
+      box.style.background = isError ? '#fef2f2' : '#f0fdf4';
+      box.style.border = isError ? '1px solid #fecaca' : '1px solid #bbf7d0';
+      box.style.color = isError ? '#dc2626' : '#15803d';
+      box.textContent = msg;
+    }
+
+    function clearAuthMessage() {
+      const box = document.getElementById('auth-msg-box');
+      if (box) {
+        box.style.display = 'none';
+        box.textContent = '';
+      }
+    }
+
+    function switchAuthTab(tabName) {
+      clearAuthMessage();
+      const titleTextEl = document.getElementById('user-auth-modal-title-text');
+      if (titleTextEl) {
+        if (tabName === 'register') titleTextEl.textContent = 'Tạo tài khoản';
+        else if (tabName === 'forgot') titleTextEl.textContent = 'Khôi phục mật khẩu';
+        else titleTextEl.textContent = 'Đăng nhập';
+      }
+      document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      document.getElementById('tab-login').style.display = tabName === 'login' ? 'block' : 'none';
+      document.getElementById('tab-register').style.display = tabName === 'register' ? 'block' : 'none';
+      document.getElementById('tab-forgot').style.display = tabName === 'forgot' ? 'block' : 'none';
+
+      if (tabName === 'register') {
+        document.getElementById('form-register-step-a').style.display = 'block';
+        document.getElementById('form-register-step-b').style.display = 'none';
+      }
+      if (tabName === 'forgot') {
+        document.getElementById('form-forgot-step-a').style.display = 'block';
+        document.getElementById('form-forgot-step-b').style.display = 'none';
+      }
+    }
+
+    document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchAuthTab(btn.dataset.tab));
+    });
+
+    const linkGotoRegister = document.getElementById('link-goto-register');
+    if (linkGotoRegister) {
+      linkGotoRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthTab('register');
+      });
+    }
+
+    const linkGotoForgot = document.getElementById('link-goto-forgot');
+    if (linkGotoForgot) {
+      linkGotoForgot.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthTab('forgot');
+      });
+    }
+
+    const linkRegGotoLogin = document.getElementById('link-reg-goto-login');
+    if (linkRegGotoLogin) {
+      linkRegGotoLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthTab('login');
+      });
+    }
+
+    const linkForgotGotoLogin = document.getElementById('link-forgot-goto-login');
+    if (linkForgotGotoLogin) {
+      linkForgotGotoLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthTab('login');
+      });
+    }
+
+    const btnRegBack = document.getElementById('btn-reg-back');
+    if (btnRegBack) {
+      btnRegBack.addEventListener('click', () => {
+        clearAuthMessage();
+        document.getElementById('form-register-step-a').style.display = 'block';
+        document.getElementById('form-register-step-b').style.display = 'none';
+      });
+    }
+
+    const btnForgotBack = document.getElementById('btn-forgot-back');
+    if (btnForgotBack) {
+      btnForgotBack.addEventListener('click', () => {
+        clearAuthMessage();
+        document.getElementById('form-forgot-step-a').style.display = 'block';
+        document.getElementById('form-forgot-step-b').style.display = 'none';
+      });
+    }
+
+    // Form: Login
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessage();
+      const btn = document.getElementById('btn-submit-login');
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng nhập...';
+
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Đăng nhập thất bại');
+
+        currentUser = data.user;
+        renderAccountHeader();
+        closeUserAuthModal();
+        if (modal && modal.classList.contains('open')) {
+          updateCheckoutAuthBadge();
+        }
+      } catch (err) {
+        showAuthMessage(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+      }
+    });
+
+    const btnModalQuickUser = document.getElementById('btn-modal-quick-user');
+    if (btnModalQuickUser) btnModalQuickUser.addEventListener('click', quickLoginUser);
+    const btnModalQuickAdmin = document.getElementById('btn-modal-quick-admin');
+    if (btnModalQuickAdmin) btnModalQuickAdmin.addEventListener('click', quickLoginAdmin);
+
+    // Form: Register Step A
+    document.getElementById('form-register-step-a').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessage();
+      const btn = document.getElementById('btn-submit-reg-a');
+      const fullName = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const confirmPassword = document.getElementById('reg-confirm-password').value;
+
+      if (password.length < 6) {
+        showAuthMessage('Mật khẩu phải từ 6 ký tự trở lên nha bà con!', true);
+        return;
+      }
+      if (password !== confirmPassword) {
+        showAuthMessage('Mật khẩu xác nhận hổng khớp với mật khẩu đã nhập!', true);
+        document.getElementById('reg-confirm-password').focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi mã xác thực...';
+
+      try {
+        const res = await fetch('/api/auth/send-register-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ full_name: fullName, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gửi mã xác thực thất bại');
+
+        pendingRegister = { email, full_name: fullName, password };
+        document.getElementById('reg-target-email').textContent = email;
+        document.getElementById('form-register-step-a').style.display = 'none';
+        document.getElementById('form-register-step-b').style.display = 'block';
+        document.getElementById('reg-otp').value = '';
+        if (data.dev_otp) {
+          document.getElementById('reg-otp').value = data.dev_otp;
+          showAuthMessage(`Mã xác thực của bạn là: <strong>${data.dev_otp}</strong> (Đã tự động điền sẵn)`);
+        } else {
+          showAuthMessage(data.message || 'Mã xác thực đã được gửi tới email! Quý khách vui lòng kiểm tra hộp thư.');
+        }
+        document.getElementById('reg-otp').focus();
+        regCooldownTimer = startCooldown('btn-resend-reg-otp', regCooldownTimer);
+      } catch (err) {
+        showAuthMessage(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Gửi mã xác thực qua Email';
+      }
+    });
+
+    let regCooldownTimer = null;
+    let forgotCooldownTimer = null;
+
+    function startCooldown(buttonId, timerRef, defaultText = 'Gửi lại mã OTP', seconds = 60) {
+      const btn = document.getElementById(buttonId);
+      if (!btn) return null;
+      if (timerRef) clearInterval(timerRef);
+      btn.disabled = true;
+      btn.style.opacity = '0.55';
+      btn.style.cursor = 'not-allowed';
+      btn.style.textDecoration = 'none';
+
+      let remaining = seconds;
+      btn.textContent = `Gửi lại mã (${remaining}s)`;
+
+      const timer = setInterval(() => {
+        remaining--;
+        if (remaining > 0) {
+          btn.textContent = `Gửi lại mã (${remaining}s)`;
+        } else {
+          clearInterval(timer);
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+          btn.style.textDecoration = 'underline';
+          btn.textContent = defaultText;
+        }
+      }, 1000);
+      return timer;
+    }
+
+    // Resend Register OTP
+    const btnResendRegOtp = document.getElementById('btn-resend-reg-otp');
+    if (btnResendRegOtp) {
+      btnResendRegOtp.addEventListener('click', async () => {
+        if (!pendingRegister || !pendingRegister.email) {
+          showAuthMessage('Không tìm thấy thông tin đăng ký, vui lòng quay lại nhập lại!', true);
+          return;
+        }
+        btnResendRegOtp.disabled = true;
+        btnResendRegOtp.textContent = 'Đang gửi lại...';
+        try {
+          const res = await fetch('/api/auth/send-register-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(pendingRegister)
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Gửi lại mã xác thực thất bại');
+          if (data.dev_otp) {
+            document.getElementById('reg-otp').value = data.dev_otp;
+            showAuthMessage(`Mã xác thực mới của bạn là: <strong>${data.dev_otp}</strong> (Đã tự động điền sẵn)`);
+          } else {
+            showAuthMessage(data.message || 'Mã xác thực mới đã được gửi tới email của bạn!');
+          }
+          showToast('Đã gửi lại mã OTP mới!', 'success');
+          regCooldownTimer = startCooldown('btn-resend-reg-otp', regCooldownTimer);
+        } catch (err) {
+          showAuthMessage(err.message, true);
+          btnResendRegOtp.disabled = false;
+          btnResendRegOtp.textContent = 'Gửi lại mã OTP';
+        }
+      });
+    }
+
+    // Form: Register Step B
+    document.getElementById('form-register-step-b').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessage();
+      const btn = document.getElementById('btn-submit-reg-b');
+      const code = document.getElementById('reg-otp').value.trim();
+
+      if (!code || code.length !== 6) {
+        showAuthMessage('Vui lòng nhập đủ 6 số OTP nha!', true);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang xác thực...';
+
+      try {
+        const email = pendingRegister ? pendingRegister.email : document.getElementById('reg-email').value.trim();
+        const res = await fetch('/api/auth/verify-register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, code })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Mã OTP không hợp lệ');
+
+        currentUser = data.user;
+        renderAccountHeader();
+        closeUserAuthModal();
+        if (modal && modal.classList.contains('open')) {
+          updateCheckoutAuthBadge();
+        }
+        showToast('Tạo tài khoản thành công! Chào mừng ' + (currentUser.full_name || '') + '!', 'success');
+      } catch (err) {
+        showAuthMessage(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Xác nhận & Kích hoạt tài khoản';
+      }
+    });
+
+    // Form: Forgot Step A
+    document.getElementById('form-forgot-step-a').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessage();
+      const btn = document.getElementById('btn-submit-forgot-a');
+      const email = document.getElementById('forgot-email').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi mã...';
+
+      try {
+        const res = await fetch('/api/auth/send-reset-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gửi mã OTP thất bại');
+
+        pendingForgotEmail = email;
+        document.getElementById('forgot-target-email').textContent = email;
+        document.getElementById('form-forgot-step-a').style.display = 'none';
+        document.getElementById('form-forgot-step-b').style.display = 'block';
+        document.getElementById('forgot-otp').value = '';
+        document.getElementById('forgot-new-pass').value = '';
+        if (data.dev_otp) {
+          document.getElementById('forgot-otp').value = data.dev_otp;
+          showAuthMessage(`Mã OTP của bạn là: <strong>${data.dev_otp}</strong> (Đã tự động điền sẵn)`);
+        } else {
+          showAuthMessage(data.message || 'Đã gửi mã OTP tới email của bạn!');
+        }
+        document.getElementById('forgot-otp').focus();
+        forgotCooldownTimer = startCooldown('btn-resend-forgot-otp', forgotCooldownTimer);
+      } catch (err) {
+        showAuthMessage(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Gửi mã OTP';
+      }
+    });
+
+    // Resend Forgot OTP
+    const btnResendForgotOtp = document.getElementById('btn-resend-forgot-otp');
+    if (btnResendForgotOtp) {
+      btnResendForgotOtp.addEventListener('click', async () => {
+        if (!pendingForgotEmail) {
+          showAuthMessage('Vui lòng nhập email tài khoản!', true);
+          return;
+        }
+        btnResendForgotOtp.disabled = true;
+        btnResendForgotOtp.textContent = 'Đang gửi lại...';
+        try {
+          const res = await fetch('/api/auth/send-reset-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email: pendingForgotEmail })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Gửi lại mã OTP thất bại');
+          if (data.dev_otp) {
+            document.getElementById('forgot-otp').value = data.dev_otp;
+            showAuthMessage(`Mã OTP mới của bạn là: <strong>${data.dev_otp}</strong> (Đã tự động điền sẵn)`);
+          } else {
+            showAuthMessage(data.message || 'Mã OTP mới đã được gửi tới email của bạn!');
+          }
+          showToast('Đã gửi lại mã OTP mới!', 'success');
+          forgotCooldownTimer = startCooldown('btn-resend-forgot-otp', forgotCooldownTimer);
+        } catch (err) {
+          showAuthMessage(err.message, true);
+          btnResendForgotOtp.disabled = false;
+          btnResendForgotOtp.textContent = 'Gửi lại mã OTP';
+        }
+      });
+    }
+
+    // Form: Forgot Step B
+    document.getElementById('form-forgot-step-b').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessage();
+      const btn = document.getElementById('btn-submit-forgot-b');
+      const code = document.getElementById('forgot-otp').value.trim();
+      const new_password = document.getElementById('forgot-new-pass').value;
+      const confirm_password = document.getElementById('forgot-confirm-pass').value;
+
+      if (!code || code.length !== 6) {
+        showAuthMessage('Vui lòng nhập đủ 6 số OTP nha!', true);
+        return;
+      }
+      if (new_password.length < 6) {
+        showAuthMessage('Mật khẩu mới phải từ 6 ký tự trở lên nha bà con!', true);
+        return;
+      }
+      if (new_password !== confirm_password) {
+        showAuthMessage('Mật khẩu xác nhận hổng khớp với mật khẩu mới!', true);
+        document.getElementById('forgot-confirm-pass').focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang cập nhật...';
+
+      try {
+        const email = pendingForgotEmail || document.getElementById('forgot-email').value.trim();
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, code, new_password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Cập nhật mật khẩu thất bại');
+
+        switchAuthTab('login');
+        document.getElementById('login-email').value = email;
+        showAuthMessage(data.message || 'Đổi mật khẩu thành công! Giờ quý dzị có thể đăng nhập.');
+      } catch (err) {
+        showAuthMessage(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Cập nhật mật khẩu mới';
+      }
+    });
+
+    // ----------------------------------------------------
+    // My Orders Modal Logic
+    // ----------------------------------------------------
+    const myOrdersModal = document.getElementById('my-orders-modal');
+    const btnCloseMyOrders = document.getElementById('btn-close-my-orders');
+    const myOrdersList = document.getElementById('my-orders-list');
+
+    function openMyOrdersModal() {
+      myOrdersModal.classList.add('open');
+      loadMyOrders();
+    }
+
+    function closeMyOrdersModal() {
+      myOrdersModal.classList.remove('open');
+    }
+
+    if (btnCloseMyOrders) btnCloseMyOrders.addEventListener('click', closeMyOrdersModal);
+    if (myOrdersModal) {
+      myOrdersModal.addEventListener('click', (e) => {
+        if (e.target === myOrdersModal) closeMyOrdersModal();
+      });
+    }
+
+    async function loadMyOrders() {
+      myOrdersList.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.875rem;">Đang tải danh sách đơn hàng của bạn...</div>';
+
+      try {
+        const res = await fetch('/api/user/orders', { credentials: 'include' });
+        if (res.status === 401) {
+          currentUser = null;
+          renderAccountHeader();
+          closeMyOrdersModal();
+          showToast('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại!', 'error');
+          return;
+        }
+        const orders = await res.json();
+        if (!res.ok) throw new Error(orders.error || 'Lỗi tải đơn hàng');
+
+        if (!orders || orders.length === 0) {
+          myOrdersList.innerHTML = `
+            <div style="text-align:center; padding:3rem 1rem; color:var(--text-subtle);">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">📦</div>
+              <div style="font-weight:600; font-size:0.95rem; color:var(--text); margin-bottom:0.25rem;">Chưa có đơn hàng nào hết trơn á!</div>
+              <div style="font-size:0.825rem;">Quý dzị lụm vài món AI xịn xò ủng hộ thằng em nghen!</div>
+            </div>
+          `;
+          return;
+        }
+
+        const badgeColorMap = {
+          pending: 'background:#fef3c7; color:#b45309; border:1px solid #fde68a;',
+          paid: 'background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;',
+          processing: 'background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;',
+          completed: 'background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;',
+          cancelled: 'background:#fef2f2; color:#b91c1c; border:1px solid #fecaca;'
+        };
+
+        myOrdersList.innerHTML = orders.map(order => {
+          const statusText = statusMap[order.status] || order.status;
+          const badgeStyle = badgeColorMap[order.status] || 'background:var(--surface); color:var(--text); border:1px solid var(--border);';
+          const createdAt = order.created_at ? new Date(order.created_at).toLocaleString('vi-VN') : '—';
+          const totalVal = Number(order.total_price || 0).toLocaleString('vi-VN') + 'đ';
+
+          return `
+            <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.55rem; flex-wrap:wrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span style="font-weight:800; font-family:monospace; font-size:1rem; color:var(--black);">${order.order_code}</span>
+                  <span style="font-size:0.75rem; color:var(--text-subtle);">${createdAt}</span>
+                </div>
+                <span style="font-size:0.75rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:var(--radius-pill); ${badgeStyle}">${statusText}</span>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-size:0.8125rem; color:var(--text-muted);">Tổng thiệt hại:</span>
+                <span style="font-size:1.05rem; font-weight:800; color:var(--black);">${totalVal}</span>
+              </div>
+
+              ${order.items && order.items.length ? `
+                <div style="border-top:1px dashed var(--border); padding-top:0.5rem;">
+                  <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.35rem;">
+                    ${order.items.map(it => `
+                      <li style="display:flex; justify-content:space-between; font-size:0.8125rem;">
+                        <span style="color:var(--text);">• ${it.product_name} <span style="color:var(--text-subtle);">x${it.quantity}</span></span>
+                        <span style="font-weight:600; color:var(--black);">${(it.price * it.quantity).toLocaleString('vi-VN')}đ</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${renderDeliverySection(order)}
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        myOrdersList.innerHTML = `<div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:0.875rem; border-radius:var(--radius-sm); font-size:0.85rem;">Không tải được đơn hàng: ${err.message}</div>`;
+      }
+    }
+
+    // FAQ Modal Logic
+    const faqModal = document.getElementById('faq-modal');
+    const btnCloseFaq = document.getElementById('btn-close-faq');
+    const linkFooterFaq = document.getElementById('link-footer-faq');
+
+    function openFaqModal() {
+      if (faqModal) faqModal.classList.add('open');
+    }
+    function closeFaqModal() {
+      if (faqModal) faqModal.classList.remove('open');
+    }
+
+    if (linkFooterFaq) linkFooterFaq.addEventListener('click', (e) => { e.preventDefault(); openFaqModal(); });
+    if (btnCloseFaq) btnCloseFaq.addEventListener('click', closeFaqModal);
+    if (faqModal) {
+      faqModal.addEventListener('click', (e) => {
+        if (e.target === faqModal) closeFaqModal();
+      });
+    }
+
+    // Notification dropdown & listeners
+    const btnNotifBell = document.getElementById('btn-notif-bell');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    if (btnNotifBell && notifDropdown) {
+      btnNotifBell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = notifDropdown.style.display === 'block';
+        notifDropdown.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+          loadNotifications();
+        }
+      });
+      notifDropdown.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    const btnNotifReadAll = document.getElementById('btn-notif-read-all');
+    if (btnNotifReadAll) {
+      btnNotifReadAll.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        try {
+          await fetch('/api/notifications/read-all', { method: 'POST', credentials: 'include' });
+          await loadNotifications();
+        } catch (err) {
+          console.error('Read all error', err);
+        }
+      });
+    }
+
+    // Profile Center Modal Logic
+    const profileModal = document.getElementById('profile-modal');
+    const btnCloseProfile = document.getElementById('btn-close-profile');
+    const profileAlertBox = document.getElementById('profile-alert-box');
+    const formProfileInfo = document.getElementById('form-profile-info');
+    const formProfileChangePw = document.getElementById('form-profile-change-pw');
+    const btnProfDeleteAccount = document.getElementById('btn-prof-delete-account');
+    const btnProfViewAllOrders = document.getElementById('btn-prof-view-all-orders');
+
+    function getMonogram(name) {
+      if (!name || typeof name !== 'string') return 'JJ';
+      const clean = name.trim();
+      if (!clean) return 'JJ';
+      const parts = clean.split(/\s+/).filter(Boolean);
+      if (parts.length === 1) {
+        return parts[0].substring(0, 2).toUpperCase();
+      }
+      const first = parts[0][0];
+      const last = parts[parts.length - 1][0];
+      return (first + last).toUpperCase();
+    }
+
+    function setProfileAlert(msg, type = 'success') {
+      if (!profileAlertBox) return;
+      if (!msg) {
+        profileAlertBox.style.display = 'none';
+        return;
+      }
+      profileAlertBox.style.display = 'block';
+      if (type === 'success') {
+        profileAlertBox.style.background = '#f0fdf4';
+        profileAlertBox.style.border = '1px solid #bbf7d0';
+        profileAlertBox.style.color = '#166534';
+      } else {
+        profileAlertBox.style.background = '#fef2f2';
+        profileAlertBox.style.border = '1px solid #fecaca';
+        profileAlertBox.style.color = '#dc2626';
+      }
+      profileAlertBox.textContent = msg;
+    }
+
+    function switchProfileTab(targetTabId) {
+      document.querySelectorAll('.profile-nav-item, .profile-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === targetTabId);
+      });
+      document.querySelectorAll('.profile-tab-pane').forEach(pane => {
+        pane.style.display = pane.id === targetTabId ? 'block' : 'none';
+        pane.classList.toggle('active', pane.id === targetTabId);
+      });
+      setProfileAlert(null);
+    }
+
+    // Attach click listeners to profile nav items / tab buttons
+    document.querySelectorAll('.profile-nav-item, .profile-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.tab) switchProfileTab(btn.dataset.tab);
+      });
+    });
+
+    function renderProfileAvatar(user) {
+      const monogramEl = document.getElementById('profile-avatar-monogram');
+      const btnRemove = document.getElementById('btn-remove-avatar');
+      if (!monogramEl) return;
+      if (user && user.avatar) {
+        monogramEl.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />`;
+        if (btnRemove) btnRemove.style.display = 'inline-block';
+      } else {
+        monogramEl.innerHTML = '';
+        monogramEl.textContent = getMonogram(user ? user.full_name : '');
+        if (btnRemove) btnRemove.style.display = 'none';
+      }
+    }
+
+    async function openProfileModal(initialTab = 'tab-prof-info') {
+      if (!profileModal) return;
+      setProfileAlert(null);
+      switchProfileTab(initialTab);
+
+      const deletePwInput = document.getElementById('prof-delete-pw');
+      if (deletePwInput) deletePwInput.value = '';
+      if (formProfileChangePw) formProfileChangePw.reset();
+
+      try {
+        const res = await fetch('/api/auth/profile', { credentials: 'include' });
+        const data = await res.json();
+        if (data.user) {
+          const user = data.user;
+          const stats = data.stats || {};
+          const recentOrders = data.recent_orders || [];
+
+          // Header
+          renderProfileAvatar(user);
+          const nameEl = document.getElementById('profile-card-name');
+          if (nameEl) nameEl.textContent = user.full_name || 'Thành viên';
+          const emailEl = document.getElementById('profile-card-email');
+          if (emailEl) emailEl.textContent = user.email || '';
+
+          // Stats
+          const totalOrdersEl = document.getElementById('stat-total-orders');
+          if (totalOrdersEl) totalOrdersEl.textContent = stats.total_orders || 0;
+          const totalSpentEl = document.getElementById('stat-total-spent');
+          if (totalSpentEl) totalSpentEl.textContent = (stats.total_spent || 0).toLocaleString('vi-VN') + 'đ';
+          const pendingOrdersEl = document.getElementById('stat-pending-orders');
+          if (pendingOrdersEl) pendingOrdersEl.textContent = stats.pending_orders || 0;
+
+          // Tab 1: Info Form
+          const infoEmailEl = document.getElementById('prof-info-email');
+          if (infoEmailEl) infoEmailEl.value = user.email || '';
+          const infoNameEl = document.getElementById('prof-info-name');
+          if (infoNameEl) infoNameEl.value = user.full_name || '';
+
+          // Tab 3: Recent Orders List
+          const recentListEl = document.getElementById('profile-recent-orders-list');
+          if (recentListEl) {
+            if (recentOrders.length === 0) {
+              recentListEl.innerHTML = '<div style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.825rem;">Quý dzị chưa có đơn hàng nào tại tiệm nha!</div>';
+            } else {
+              const statusMap = {
+                pending: { label: '⏳ Chờ CK', bg: '#fef3c7', color: '#92400e' },
+                paid: { label: '💵 Đã nhận tiền', bg: '#e0f2fe', color: '#0369a1' },
+                processing: { label: '🔄 Đang xử lý', bg: '#f3e8ff', color: '#6b21a8' },
+                completed: { label: '✅ Hoàn thành', bg: '#dcfce7', color: '#15803d' },
+                cancelled: { label: '❌ Đã hủy', bg: '#fee2e2', color: '#b91c1c' }
+              };
+              recentListEl.innerHTML = recentOrders.map(o => {
+                const s = statusMap[o.status] || { label: o.status, bg: 'var(--surface)', color: 'var(--text)' };
+                const time = o.created_at ? new Date(o.created_at).toLocaleString('vi-VN') : '';
+                return `
+                  <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                      <div style="font-weight:700; font-family:monospace; font-size:0.9rem;">${o.order_code}</div>
+                      <div style="font-size:0.725rem; color:var(--text-muted); margin-top:2px;">${time}</div>
+                    </div>
+                    <div style="text-align:right;">
+                      <div style="font-weight:800; font-size:0.95rem; color:var(--text);">${Number(o.total_price || 0).toLocaleString('vi-VN')}đ</div>
+                      <span style="display:inline-block; margin-top:3px; padding:0.15rem 0.45rem; border-radius:999px; font-size:0.7rem; font-weight:700; background:${s.bg}; color:${s.color};">${s.label}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Load profile error', e);
+        setProfileAlert('Không thể tải thông tin hồ sơ lúc này!', 'error');
+      }
+
+      profileModal.classList.add('open');
+    }
+
+    function closeProfileModal() {
+      if (profileModal) profileModal.classList.remove('open');
+    }
+
+    if (btnCloseProfile) btnCloseProfile.addEventListener('click', closeProfileModal);
+    if (profileModal) {
+      profileModal.addEventListener('click', (e) => {
+        if (e.target === profileModal) closeProfileModal();
+      });
+    }
+
+    // Submit Update Name
+    if (formProfileInfo) {
+      formProfileInfo.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById('prof-info-name');
+        const name = nameInput ? nameInput.value.trim() : '';
+        const submitBtn = document.getElementById('btn-save-prof-info');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Đang lưu...'; }
+        try {
+          const res = await fetch('/api/auth/profile', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ full_name: name })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            setProfileAlert(data.message || 'Cập nhật thông tin thành công!', 'success');
+            if (currentUser) currentUser.full_name = data.full_name || name;
+            const nameEl = document.getElementById('profile-card-name');
+            if (nameEl) nameEl.textContent = data.full_name || name;
+            renderProfileAvatar(currentUser);
+            renderAccountHeader();
+          } else {
+            setProfileAlert(data.error || 'Cập nhật thất bại!', 'error');
+          }
+        } catch (err) {
+          setProfileAlert(err.message || 'Lỗi kết nối!', 'error');
+        } finally {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Lưu thay đổi thông tin'; }
+        }
+      });
+    }
+
+    // Avatar upload & remove logic
+    const btnChangeAvatar = document.getElementById('btn-change-avatar');
+    const avatarFileInput = document.getElementById('avatar-file-input');
+    const profileAvatarMonogram = document.getElementById('profile-avatar-monogram');
+    const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
+
+    if (btnChangeAvatar && avatarFileInput) {
+      btnChangeAvatar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        avatarFileInput.click();
+      });
+    }
+    if (profileAvatarMonogram && avatarFileInput) {
+      profileAvatarMonogram.addEventListener('click', () => {
+        avatarFileInput.click();
+      });
+    }
+    if (avatarFileInput) {
+      avatarFileInput.addEventListener('change', async (e) => {
+        if (!e.target.files || !e.target.files[0]) return;
+        const file = e.target.files[0];
+        if (file.size > 3 * 1024 * 1024) {
+          setProfileAlert('Dung lượng ảnh tối đa 3MB nha!', 'error');
+          avatarFileInput.value = '';
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        const monogramEl = document.getElementById('profile-avatar-monogram');
+        if (monogramEl) monogramEl.style.opacity = '0.5';
+
+        try {
+          const res = await fetch('/api/auth/avatar', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (currentUser) currentUser.avatar = data.avatar;
+            renderProfileAvatar(currentUser || { avatar: data.avatar });
+            renderAccountHeader();
+            setProfileAlert('Đổi ảnh đại diện thành công!', 'success');
+          } else {
+            setProfileAlert(data.error || 'Tải ảnh đại diện thất bại!', 'error');
+          }
+        } catch (err) {
+          setProfileAlert(err.message || 'Lỗi tải ảnh!', 'error');
+        } finally {
+          if (monogramEl) monogramEl.style.opacity = '1';
+          avatarFileInput.value = '';
+        }
+      });
+    }
+
+    if (btnRemoveAvatar) {
+      btnRemoveAvatar.addEventListener('click', async () => {
+        if (!confirm('Bạn muốn gỡ ảnh đại diện và quay lại dùng chữ cái đầu?')) return;
+        try {
+          const res = await fetch('/api/auth/avatar', {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (currentUser) currentUser.avatar = null;
+            renderProfileAvatar(currentUser || {});
+            renderAccountHeader();
+            setProfileAlert('Đã gỡ ảnh đại diện, chuyển sang chữ cái đầu!', 'success');
+          } else {
+            setProfileAlert(data.error || 'Gỡ ảnh thất bại!', 'error');
+          }
+        } catch (err) {
+          setProfileAlert(err.message || 'Lỗi gỡ ảnh!', 'error');
+        }
+      });
+    }
+
+    // Submit Change Password
+    if (formProfileChangePw) {
+      formProfileChangePw.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const current = document.getElementById('prof-pw-current').value;
+        const newPw = document.getElementById('prof-pw-new').value;
+        const confirmPw = document.getElementById('prof-pw-confirm').value;
+
+        if (newPw.length < 6) {
+          setProfileAlert('Mật khẩu mới phải từ 6 ký tự trở lên!', 'error');
+          return;
+        }
+        if (newPw !== confirmPw) {
+          setProfileAlert('Mật khẩu mới và xác nhận mật khẩu không khớp!', 'error');
+          return;
+        }
+
+        const submitBtn = document.getElementById('btn-save-prof-pw');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Đang cập nhật...'; }
+
+        try {
+          const res = await fetch('/api/auth/change-password', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_password: current, new_password: newPw })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            setProfileAlert(data.message || 'Đổi mật khẩu thành công!', 'success');
+            formProfileChangePw.reset();
+          } else {
+            setProfileAlert(data.error || 'Đổi mật khẩu thất bại!', 'error');
+          }
+        } catch (err) {
+          setProfileAlert(err.message || 'Lỗi kết nối!', 'error');
+        } finally {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Cập nhật mật khẩu mới'; }
+        }
+      });
+    }
+
+    // View All Orders button inside Profile
+    if (btnProfViewAllOrders) {
+      btnProfViewAllOrders.addEventListener('click', () => {
+        closeProfileModal();
+        openMyOrdersModal();
+      });
+    }
+
+    // Delete Account
+    if (btnProfDeleteAccount) {
+      btnProfDeleteAccount.addEventListener('click', async () => {
+        const pwInput = document.getElementById('prof-delete-pw');
+        const pw = pwInput ? pwInput.value : '';
+        if (!pw) return showToast('Vui lòng nhập mật khẩu xác nhận!', 'error');
+        
+        const confirmed = await showConfirmDialog({
+          title: 'Xóa vĩnh viễn tài khoản',
+          message: 'Quý khách có chắc chắn muốn xóa vĩnh viễn tài khoản này?<br><span style="color:#b91c1c; font-size:0.8rem; display:block; margin-top:0.35rem;">Thao tác này KHÔNG THỂ hoàn tác! Toàn bộ quyền truy cập sẽ bị hủy.</span>',
+          confirmText: 'Xác nhận xóa tài khoản',
+          cancelText: 'Hủy bỏ',
+          type: 'danger'
+        });
+        if (!confirmed) return;
+
+        btnProfDeleteAccount.disabled = true;
+        btnProfDeleteAccount.textContent = 'Đang xóa tài khoản...';
+        try {
+          const res = await fetch('/api/auth/delete-account', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast('Tài khoản đã được xóa thành công. Tạm biệt quý khách!', 'info');
+            currentUser = null;
+            closeProfileModal();
+            renderAccountHeader();
+          } else {
+            showToast(data.error || 'Xóa tài khoản thất bại!', 'error');
+          }
+        } catch (err) {
+          showToast('Lỗi kết nối: ' + err.message, 'error');
+        } finally {
+          btnProfDeleteAccount.disabled = false;
+          btnProfDeleteAccount.textContent = 'Tôi hiểu và đồng ý xóa vĩnh viễn tài khoản này';
+        }
+      });
+    }
+
+    // Global click away for dropdowns
+    document.addEventListener('click', () => {
+      const menuDd = document.getElementById('account-dropdown-menu');
+      if (menuDd) menuDd.style.display = 'none';
+      const notifDd = document.getElementById('notif-dropdown');
+      if (notifDd) notifDd.style.display = 'none';
+      const sortMenu = document.getElementById('sort-menu');
+      if (sortMenu) sortMenu.style.display = 'none';
+    });
+
+    init();
+  </script>
+</body>
+</html>
