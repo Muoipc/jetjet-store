@@ -807,10 +807,10 @@
       </a>
 
       <div style="display:flex; align-items:center; gap:0.5rem;">
-        <!-- Notification Bell (chỉ hiện khi đăng nhập) -->
-        <div id="notif-bell-wrap" style="display:none; position:relative;">
-          <button class="cart-btn" id="btn-notif-bell" title="Thông báo" style="position:relative; padding:0.5rem 0.65rem;">
-            <svg class="ui-icon" style="width:1.15rem;height:1.15rem;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <!-- Notification Bell (Luôn hiển thị theo style tối giản) -->
+        <div id="notif-bell-wrap" style="position:relative;">
+          <button class="cart-btn" id="btn-notif-bell" title="Thông báo" aria-label="Thông báo" style="position:relative; padding:0.5rem 0.65rem;">
+            <svg class="ui-icon" style="width:1.15rem;height:1.15rem;" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
             <span id="notif-badge" style="display:none; position:absolute; top:-4px; right:-4px; background:var(--black); color:#fff; font-size:0.65rem; font-weight:700; min-width:18px; height:18px; border-radius:999px; align-items:center; justify-content:center; line-height:1; border:2px solid #fff; padding:0 3px;">0</span>
           </button>
           <div id="notif-dropdown" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-sm); width:320px; max-height:380px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:999;">
@@ -1734,14 +1734,30 @@
     }
 
     async function loadNotifications() {
-      if (!currentUser) return;
+      const badge = document.getElementById('notif-badge');
+      const list = document.getElementById('notif-list');
+      const empty = document.getElementById('notif-empty');
+
+      if (!currentUser) {
+        if (badge) badge.style.display = 'none';
+        if (list) {
+          list.innerHTML = `
+            <div style="padding:1.75rem 1.25rem; text-align:center; color:var(--text-muted); font-size:0.825rem;">
+              <svg class="ui-icon" style="width:2.2rem;height:2.2rem;margin-bottom:0.5rem;color:var(--text-subtle);" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+              <div style="font-weight:700; color:var(--text); margin-bottom:0.25rem;">Chưa đăng nhập</div>
+              <p style="margin:0 0 0.85rem 0; line-height:1.5; font-size:0.8rem;">Đăng nhập để xem thông báo đơn hàng và mã kích hoạt của bạn.</p>
+              <a href="/login.html" class="btn-solid-black" style="display:inline-flex; padding:0.45rem 1rem; font-size:0.775rem; text-decoration:none; border-radius:var(--radius-sm); font-weight:700;">Đăng nhập ngay</a>
+            </div>
+          `;
+        }
+        if (empty) empty.style.display = 'none';
+        return;
+      }
+
       try {
         const res = await fetch('/api/notifications', { credentials: 'include' });
         if (!res.ok) return;
         const data = await res.json();
-        const badge = document.getElementById('notif-badge');
-        const list = document.getElementById('notif-list');
-        const empty = document.getElementById('notif-empty');
 
         if (badge) {
           const unread = Number(data.unread_count) || 0;
@@ -1763,20 +1779,22 @@
         empty.style.display = 'none';
 
         const typeIcons = {
-          order_paid: '💳',
-          order_delivered: '📦',
-          order_cancelled: '❌',
-          promo: '🏷️'
+          order_paid: '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#15803d;display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>',
+          order_completed: '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#2563eb;display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+          order_delivered: '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#2563eb;display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+          order_cancelled: '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#dc2626;display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+          promo: '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#d97706;display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>'
         };
+        const defaultIcon = '<svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:var(--text);display:inline-block;vertical-align:-2px;" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
 
         list.innerHTML = notifs.map(n => {
-          const icon = typeIcons[n.type] || '🔔';
+          const icon = typeIcons[n.type] || defaultIcon;
           const ago = timeAgo(n.created_at);
           return `
             <div class="notif-item ${n.is_read ? 'read' : 'unread'}" data-id="${n.id}">
               <div class="notif-dot"></div>
               <div style="flex:1;">
-                <div style="font-weight:700; font-size:0.825rem; color:var(--text);">${icon} ${escapeHtml(n.title)}</div>
+                <div style="font-weight:700; font-size:0.825rem; color:var(--text); display:flex; align-items:center; gap:0.35rem;">${icon} <span>${escapeHtml(n.title)}</span></div>
                 <div style="color:var(--text-muted); font-size:0.775rem; margin-top:2px;">${escapeHtml(n.message || '')}</div>
                 <div class="notif-time">${ago}</div>
               </div>
@@ -1809,13 +1827,14 @@
         notifPollTimer = null;
       }
       const bellWrap = document.getElementById('notif-bell-wrap');
+      if (bellWrap) bellWrap.style.display = 'block';
+
       if (!currentUser) {
-        if (bellWrap) bellWrap.style.display = 'none';
-        const notifDd = document.getElementById('notif-dropdown');
-        if (notifDd) notifDd.style.display = 'none';
+        const badge = document.getElementById('notif-badge');
+        if (badge) badge.style.display = 'none';
         return;
       }
-      if (bellWrap) bellWrap.style.display = 'block';
+
       loadNotifications();
       notifPollTimer = setInterval(loadNotifications, 30000);
     }
@@ -3414,6 +3433,11 @@
         }
       });
       notifDropdown.addEventListener('click', (e) => e.stopPropagation());
+      window.addEventListener('click', () => {
+        if (notifDropdown && notifDropdown.style.display === 'block') {
+          notifDropdown.style.display = 'none';
+        }
+      });
     }
 
     const btnNotifReadAll = document.getElementById('btn-notif-read-all');
