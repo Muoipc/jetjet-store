@@ -945,36 +945,14 @@
         </div>
 
         <!-- Logged-in Customer View -->
-        <div id="checkout-user-box" style="display:none; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.9rem 1rem; margin-bottom:1.15rem;">
+        <div id="checkout-user-box" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.9rem 1rem; margin-bottom:1.15rem;">
           <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem; letter-spacing:0.04em; display:flex; justify-content:space-between; align-items:center;">
             <span>Thông tin nhận link Drive</span>
-            <span style="font-size:0.725rem; color:#15803d; font-weight:600; text-transform:none;">✓ Thành viên đã đăng nhập</span>
+            <span style="font-size:0.725rem; color:#15803d; font-weight:600; text-transform:none;">✓ Tài khoản đã xác thực</span>
           </div>
           <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.85rem;">
-            <div><span style="color:var(--text-muted);">Họ tên:</span> <strong id="checkout-display-name"></strong></div>
+            <div><span style="color:var(--text-muted);">Khách hàng:</span> <strong id="checkout-display-name"></strong></div>
             <div><span style="color:var(--text-muted);">Gmail nhận tài liệu:</span> <strong id="checkout-display-email"></strong></div>
-          </div>
-        </div>
-
-        <!-- Guest Customer View -->
-        <div id="checkout-guest-box" style="display:none; margin-bottom:1.15rem;">
-          <div class="form-field" style="margin-bottom:0.75rem;">
-            <label for="c-guest-email" style="font-weight:700; font-size:0.85rem; color:var(--text);">
-              Gmail Google nhận tài liệu &amp; link Drive <span style="color:#dc2626;">*</span>
-            </label>
-            <input type="email" id="c-guest-email" placeholder="ví dụ: nguyenvana@gmail.com" style="width:100%; box-sizing:border-box;" />
-            <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:0.25rem;">
-              Hệ thống sẽ cấp quyền xem và tải folder tài liệu trực tiếp vào Gmail này.
-            </div>
-          </div>
-          <div class="form-field" style="margin-bottom:0.5rem;">
-            <label for="c-guest-name" style="font-size:0.825rem; color:var(--text-muted);">
-              Tên của bạn (Tùy chọn)
-            </label>
-            <input type="text" id="c-guest-name" placeholder="Nguyễn Văn A" style="width:100%; box-sizing:border-box;" />
-          </div>
-          <div style="font-size:0.775rem; color:var(--text-muted);">
-            Đã có tài khoản? <a href="/login.html" style="color:var(--black); font-weight:700; text-decoration:underline;">Đăng nhập nhanh</a> để lưu đơn vào tài khoản.
           </div>
         </div>
 
@@ -1467,10 +1445,9 @@
         <div id="modal-p-guarantee"></div>
       </div>
 
-      <!-- Actions: Buy Now & Add to Cart -->
-      <div style="display:flex; align-items:center; gap:0.65rem; padding-top:1.15rem; border-top:1px solid var(--border); margin-top:0.5rem;">
-        <button class="btn-solid-black" id="modal-btn-buy-now" style="flex:1.2; padding:0.75rem; font-weight:700; border-radius:var(--radius-sm);">⚡ Mua ngay</button>
-        <button class="cart-btn" id="modal-btn-add-cart" style="flex:1; justify-content:center; padding:0.75rem; font-weight:600; border-radius:var(--radius-sm);">+ Thêm vào giỏ</button>
+      <!-- Action: Add to Cart -->
+      <div style="padding-top:1.15rem; border-top:1px solid var(--border); margin-top:0.5rem;">
+        <button class="btn-solid-black" id="modal-btn-add-cart" style="width:100%; justify-content:center; padding:0.75rem; font-weight:700; border-radius:var(--radius-sm);">+ Thêm vào giỏ hàng</button>
       </div>
     </div>
   </div>
@@ -2029,18 +2006,11 @@
 
       container.innerHTML = list.map(p => {
         let stockHtml = '';
-        let buyBtnHtml = `
-          <div style="display:flex; align-items:center; gap:0.4rem;">
-            <button class="btn-buy" style="padding:0.45rem 0.85rem; font-size:0.8rem; font-weight:700;" onclick="buyNow(${p.id})">⚡ Mua ngay</button>
-            <button class="cart-btn" style="padding:0.45rem 0.55rem;" onclick="addToCart(${p.id}, false)" title="Thêm vào giỏ hàng">
-              <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            </button>
-          </div>
-        `;
+        let buyBtnHtml = `<button class="btn-buy" onclick="addToCart(${p.id})">+ Thêm vào giỏ</button>`;
 
         if (p.stock <= 0) {
           stockHtml = `<span style="color:#dc2626;font-size:0.75rem;font-weight:700;">Tạm hết hàng</span>`;
-          buyBtnHtml = `<button class="btn-buy" disabled style="opacity:0.4;cursor:not-allowed;padding:0.45rem 0.85rem;font-size:0.8rem;">Hết hàng</button>`;
+          buyBtnHtml = `<button class="btn-buy" disabled style="opacity:0.4;cursor:not-allowed;">Hết hàng</button>`;
         } else if (p.stock <= 3 && p.stock > 0) {
           stockHtml = `<span style="color:#d97706;font-size:0.75rem;font-weight:600;">Còn ${p.stock} suất!</span>`;
         }
@@ -2256,21 +2226,11 @@
       currentDetailProduct = null;
     }
 
-    const modalBtnBuyNow = document.getElementById('modal-btn-buy-now');
-    if (modalBtnBuyNow) {
-      modalBtnBuyNow.addEventListener('click', () => {
-        if (!currentDetailProduct) return;
-        const pId = currentDetailProduct.id;
-        closeProductDetailModal();
-        buyNow(pId);
-      });
-    }
-
     if (modalBtnAddCart) {
       modalBtnAddCart.addEventListener('click', () => {
         if (!currentDetailProduct) return;
         const pId = currentDetailProduct.id;
-        addToCart(pId, false);
+        addToCart(pId);
         closeProductDetailModal();
       });
     }
@@ -2283,8 +2243,6 @@
     }
 
     // Cart actions
-    let activeCheckoutItems = null;
-
     function addToCart(id, openDrawer = true) {
       const p = products.find(x => x.id === id);
       if (!p || p.stock <= 0) return;
@@ -2304,13 +2262,6 @@
       saveCart();
       updateCart();
       if (openDrawer) openCart();
-    }
-
-    function buyNow(id) {
-      const p = products.find(x => x.id === id);
-      if (!p || p.stock <= 0) return;
-      activeCheckoutItems = [{ ...p, quantity: 1 }];
-      openCheckout(activeCheckoutItems);
     }
 
     function removeFromCart(id) {
@@ -2418,9 +2369,16 @@
     const form = document.getElementById('checkout-form');
     const qrWrap = document.getElementById('qr-wrap');
 
-    function openCheckout(customItems = null) {
-      const itemsToBuy = customItems || cart;
-      if (!itemsToBuy || itemsToBuy.length === 0) {
+    function openCheckout() {
+      if (!currentUser) {
+        closeCart();
+        showToast('Vui lòng đăng nhập tài khoản để tiến hành mua hàng!', 'info');
+        setTimeout(() => {
+          window.location.href = '/login.html?redirect=/';
+        }, 500);
+        return;
+      }
+      if (!cart || cart.length === 0) {
         showToast('Vui lòng chọn sản phẩm trước khi thanh toán!', 'error');
         return;
       }
@@ -2428,7 +2386,7 @@
 
       const summaryEl = document.getElementById('checkout-items-summary');
       if (summaryEl) {
-        summaryEl.innerHTML = itemsToBuy.map(item => `
+        summaryEl.innerHTML = cart.map(item => `
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.825rem;">
             <span style="font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:18rem;">${escapeHtml(item.name)} <span style="color:var(--text-subtle);">x${item.quantity}</span></span>
             <span style="font-weight:700; color:var(--black); flex-shrink:0;">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</span>
@@ -2436,24 +2394,14 @@
         `).join('');
       }
 
-      const total = itemsToBuy.reduce((s, i) => s + (i.price * i.quantity), 0);
+      const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
       const sumEl = document.getElementById('checkout-sum');
       if (sumEl) sumEl.textContent = total.toLocaleString('vi-VN') + 'đ';
 
-      const userBox = document.getElementById('checkout-user-box');
-      const guestBox = document.getElementById('checkout-guest-box');
-
-      if (currentUser) {
-        if (userBox) userBox.style.display = 'block';
-        if (guestBox) guestBox.style.display = 'none';
-        const dispName = document.getElementById('checkout-display-name');
-        const dispEmail = document.getElementById('checkout-display-email');
-        if (dispName) dispName.textContent = currentUser.full_name || 'Học viên JetJet';
-        if (dispEmail) dispEmail.textContent = currentUser.email || '';
-      } else {
-        if (userBox) userBox.style.display = 'none';
-        if (guestBox) guestBox.style.display = 'block';
-      }
+      const dispName = document.getElementById('checkout-display-name');
+      const dispEmail = document.getElementById('checkout-display-email');
+      if (dispName) dispName.textContent = currentUser.full_name || 'Học viên JetJet';
+      if (dispEmail) dispEmail.textContent = currentUser.email || '';
 
       form.style.display = 'block';
       qrWrap.style.display = 'none';
@@ -2462,8 +2410,19 @@
     }
 
     document.getElementById('btn-checkout-start').addEventListener('click', () => {
-      activeCheckoutItems = null;
-      openCheckout(cart);
+      if (cart.length === 0) {
+        showToast('Giỏ hàng của bạn đang trống. Vui lòng chọn sản phẩm trước!', 'error');
+        return;
+      }
+      if (!currentUser) {
+        closeCart();
+        showToast('Vui lòng đăng nhập tài khoản để tiến hành mua hàng!', 'info');
+        setTimeout(() => {
+          window.location.href = '/login.html?redirect=/';
+        }, 500);
+        return;
+      }
+      openCheckout();
     });
 
     function stopQrPolling() {
@@ -2688,29 +2647,18 @@
       const btn = document.getElementById('btn-submit-order');
       btn.disabled = true;
 
-      let custName = 'Học viên JetJet';
-      let custEmail = '';
-
-      if (currentUser) {
-        custName = currentUser.full_name || 'Học viên JetJet';
-        custEmail = currentUser.email || '';
-      } else {
-        const guestEmailInput = document.getElementById('c-guest-email');
-        const guestNameInput = document.getElementById('c-guest-name');
-        custEmail = (guestEmailInput ? guestEmailInput.value : '').trim();
-        custName = (guestNameInput && guestNameInput.value.trim()) ? guestNameInput.value.trim() : 'Học viên JetJet';
-
-        if (!custEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(custEmail)) {
-          showToast('Vui lòng nhập địa chỉ Gmail hợp lệ để nhận link Drive!', 'error');
-          btn.disabled = false;
-          if (guestEmailInput) guestEmailInput.focus();
-          return;
-        }
+      if (!currentUser) {
+        showToast('Vui lòng đăng nhập tài khoản để thanh toán!', 'error');
+        window.location.href = '/login.html?redirect=/';
+        btn.disabled = false;
+        return;
       }
 
+      const custName = currentUser.full_name || 'Học viên JetJet';
+      const custEmail = currentUser.email || '';
       const cNotesEl = document.getElementById('c-notes');
-      const itemsToOrder = activeCheckoutItems || cart;
-      if (!itemsToOrder || itemsToOrder.length === 0) {
+
+      if (!cart || cart.length === 0) {
         showToast('Giỏ hàng đang trống!', 'error');
         btn.disabled = false;
         return;
@@ -2719,9 +2667,9 @@
       const payload = {
         customer_name: custName,
         customer_email: custEmail,
-        customer_phone: '',
+        customer_phone: currentUser.phone || '',
         notes: cNotesEl ? cNotesEl.value : '',
-        items: itemsToOrder
+        items: cart
       };
 
       try {
@@ -2746,13 +2694,9 @@
 
         startQrPolling(data.order_code);
 
-        if (activeCheckoutItems) {
-          activeCheckoutItems = null;
-        } else {
-          cart = [];
-          saveCart();
-          updateCart();
-        }
+        cart = [];
+        saveCart();
+        updateCart();
       } catch (err) {
         showToast('Có lỗi xảy ra: ' + err.message, 'error');
       } finally {
