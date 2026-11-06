@@ -1560,6 +1560,7 @@
 
         titleEl.textContent = title;
         msgEl.innerHTML = message;
+        msgEl.style.display = message ? 'block' : 'none';
         btnCancel.textContent = cancelText;
         btnOk.textContent = confirmText;
 
@@ -1574,6 +1575,13 @@
           iconWrap.style.background = '#fffbeb';
           iconWrap.style.color = '#d97706';
           iconWrap.innerHTML = `<svg class="ui-icon" style="width:1.6rem;height:1.6rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`;
+          btnOk.style.background = 'var(--black)';
+          btnOk.style.borderColor = 'var(--black)';
+          btnOk.style.color = '#ffffff';
+        } else if (type === 'auth') {
+          iconWrap.style.background = '#f3f4f6';
+          iconWrap.style.color = 'var(--black)';
+          iconWrap.innerHTML = `<svg class="ui-icon" style="width:1.6rem;height:1.6rem;" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
           btnOk.style.background = 'var(--black)';
           btnOk.style.borderColor = 'var(--black)';
           btnOk.style.color = '#ffffff';
@@ -2409,17 +2417,23 @@
       modal.classList.add('open');
     }
 
-    document.getElementById('btn-checkout-start').addEventListener('click', () => {
+    document.getElementById('btn-checkout-start').addEventListener('click', async () => {
       if (cart.length === 0) {
         showToast('Giỏ hàng của bạn đang trống. Vui lòng chọn sản phẩm trước!', 'error');
         return;
       }
       if (!currentUser) {
         closeCart();
-        showToast('Vui lòng đăng nhập tài khoản để tiến hành mua hàng!', 'info');
-        setTimeout(() => {
+        const ok = await showConfirmDialog({
+          title: 'Yêu cầu đăng nhập',
+          message: '',
+          confirmText: 'Đăng nhập ngay →',
+          cancelText: 'Đóng',
+          type: 'auth'
+        });
+        if (ok) {
           window.location.href = '/login.html?redirect=/';
-        }, 500);
+        }
         return;
       }
       openCheckout();
