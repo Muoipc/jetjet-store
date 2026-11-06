@@ -229,12 +229,17 @@
     }
 
     .cart-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem; background: var(--surface); border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 1.15rem 0; border-bottom: 1px solid var(--border); gap: 1rem;
     }
-    .cart-row-title { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
-    .cart-row-price { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; }
+    .cart-row-title { font-size: 0.9rem; font-weight: 700; line-height: 1.4; color: var(--text); }
+    .cart-row-price { font-size: 0.95rem; color: var(--black); font-weight: 800; margin-top: 0.35rem; }
+    .cart-remove-link {
+      background: none; border: none; font-size: 0.775rem; color: var(--text-subtle);
+      cursor: pointer; padding: 0.35rem 0.5rem; border-radius: var(--radius-sm);
+      display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.15s, background 0.15s;
+    }
+    .cart-remove-link:hover { color: #dc2626; background: #fef2f2; }
     .qty-controls { display: flex; align-items: center; gap: 0.5rem; }
     .btn-step {
       width: 1.75rem; height: 1.75rem; border-radius: var(--radius-sm);
@@ -723,8 +728,9 @@
     #toast-container {
       position: fixed;
       bottom: 1.5rem;
-      right: 1.5rem;
-      z-index: 10001;
+      left: 1.5rem;
+      max-width: min(22rem, calc(100vw - 3rem));
+      z-index: 99;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -893,8 +899,8 @@
   <div class="cart-drawer-backdrop" id="cart-backdrop">
     <div class="cart-drawer">
       <div class="drawer-header">
-        <h3 class="drawer-title" style="display:flex;align-items:center;gap:0.5rem;">
-          <svg class="ui-icon" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <h3 class="drawer-title" style="display:flex;align-items:center;gap:0.5rem;font-size:1.05rem;">
+          <svg class="ui-icon" style="width:1.2rem;height:1.2rem;" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span>Giỏ hàng</span>
         </h3>
         <button class="btn-icon-close" id="btn-close-cart" aria-label="Đóng">
@@ -902,23 +908,34 @@
         </button>
       </div>
 
-      <div class="drawer-body" id="cart-body">
-        <div style="text-align:center; padding:3.5rem 1.5rem; color:var(--text-muted);">
+      <div class="drawer-body" id="cart-body" style="padding-inline: 1.5rem;">
+        <div style="text-align:center; padding:4rem 1.5rem; color:var(--text-muted);">
           <svg class="ui-icon" style="width:3rem;height:3rem;margin-bottom:0.75rem;color:var(--text-subtle);" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-          <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng của bạn đang trống</div>
-          <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp để thêm vào giỏ nhé!</div>
+          <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng đang trống</div>
+          <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp nhé!</div>
         </div>
       </div>
 
-      <div class="drawer-footer">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-          <button id="btn-clear-cart" type="button" style="background:none; border:none; color:var(--text-subtle); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Xóa sạch giỏ hàng</button>
-          <div class="total-line" style="margin:0;">
-            <span class="total-label">Tổng cộng:</span>
-            <span class="total-val" id="drawer-total">0đ</span>
+      <div class="drawer-footer" style="padding: 1.25rem 1.5rem 1.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.75rem;">
+          <span style="font-size:0.85rem; color:var(--text-muted);" id="drawer-items-count">0 món</span>
+          <div style="display:flex; align-items:baseline; gap:0.5rem;">
+            <span style="font-size:0.85rem; color:var(--text-muted);">Tổng cộng:</span>
+            <span class="total-val" id="drawer-total" style="font-size:1.35rem; font-weight:800; color:var(--black);">0đ</span>
           </div>
         </div>
-        <button class="btn-solid-black" id="btn-checkout-start" style="opacity:0.45; cursor:not-allowed;" disabled>Tiến hành thanh toán →</button>
+
+        <button class="btn-solid-black" id="btn-checkout-start" style="padding:0.85rem; font-size:0.925rem; border-radius:var(--radius-sm); opacity:0.45; cursor:not-allowed;" disabled>
+          Tiến hành thanh toán →
+        </button>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; font-size:0.75rem;">
+          <span style="color:#15803d; display:inline-flex; align-items:center; gap:0.3rem;">
+            <svg class="ui-icon" style="width:0.85rem;height:0.85rem;stroke:#15803d;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Tự động cấp link Drive 24/7</span>
+          </span>
+          <button id="btn-clear-cart" type="button" style="background:none; border:none; color:var(--text-subtle); cursor:pointer; text-decoration:underline;">Xóa sạch giỏ</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2286,14 +2303,19 @@
 
       const body = document.getElementById('cart-body');
       const totalEl = document.getElementById('drawer-total');
+      const itemsCountEl = document.getElementById('drawer-items-count');
       const btnCheckout = document.getElementById('btn-checkout-start');
+
+      if (itemsCountEl) {
+        itemsCountEl.textContent = `${totalCount} sản phẩm`;
+      }
 
       if (cart.length === 0) {
         body.innerHTML = `
-          <div style="text-align:center; padding:3.5rem 1.5rem; color:var(--text-muted);">
+          <div style="text-align:center; padding:4rem 1.5rem; color:var(--text-muted);">
             <svg class="ui-icon" style="width:3rem;height:3rem;margin-bottom:0.75rem;color:var(--text-subtle);" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-            <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng của bạn đang trống</div>
-            <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp để thêm vào giỏ nhé!</div>
+            <div style="font-weight:700; font-size:1rem; color:var(--text); margin-bottom:0.35rem;">Giỏ hàng đang trống</div>
+            <div style="font-size:0.825rem; line-height:1.5;">Hãy chọn khóa học hoặc tài liệu số phù hợp nhé!</div>
           </div>
         `;
         totalEl.textContent = '0đ';
@@ -2316,29 +2338,24 @@
 
       body.innerHTML = cart.map(item => {
         const isDigitalCourse = item.category === 'Khóa học & Tài liệu số' || item.is_digital;
-        const rightControls = isDigitalCourse ? `
-          <div style="display:flex; align-items:center; gap:0.4rem;">
-            <span style="font-size:0.75rem; color:var(--text-subtle); font-weight:600; background:var(--surface); padding:0.2rem 0.5rem; border-radius:var(--radius-pill); border:1px solid var(--border);">1 bản số</span>
-            <button class="btn-step" onclick="removeFromCart(${item.id})" title="Xóa món này" style="color:#dc2626; border-color:#fecaca;">✕</button>
-          </div>
-        ` : `
-          <div style="display:flex; align-items:center; gap:0.4rem;">
-            <div class="qty-controls">
-              <button class="btn-step" onclick="changeQty(${item.id}, -1)">-</button>
-              <span style="font-weight:600; font-size:0.8125rem; min-width:1rem; text-align:center;">${item.quantity}</span>
-              <button class="btn-step" onclick="changeQty(${item.id}, 1)">+</button>
-            </div>
-            <button class="btn-step" onclick="removeFromCart(${item.id})" title="Xóa món này" style="color:#dc2626; border-color:#fecaca;">✕</button>
-          </div>
-        `;
+        // Clean title: bỏ tiền tố "Khóa Học: " nếu có để giao diện gọn gàng
+        const cleanTitle = item.name.replace(/^Khóa Học:\s*/i, '').replace(/^Ebook & Khóa:\s*/i, '');
+
+        const metaTag = isDigitalCourse 
+          ? `<span style="font-size:0.725rem; color:#15803d; font-weight:600; background:#f0fdf4; padding:0.15rem 0.45rem; border-radius:var(--radius-sm); border:1px solid #bbf7d0;">⚡ Link Drive tức thì</span>`
+          : `<span style="font-size:0.725rem; color:#c2410c; font-weight:600; background:#fff7ed; padding:0.15rem 0.45rem; border-radius:var(--radius-sm); border:1px solid #fed7aa;">🎁 Gói Combo</span>`;
 
         return `
-          <div class="cart-row" style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border);">
-            <div style="flex:1; padding-right:0.75rem;">
-              <div class="cart-row-title" style="font-weight:600; font-size:0.85rem; color:var(--text); line-height:1.4;">${escapeHtml(item.name)}</div>
-              <div class="cart-row-price" style="font-size:0.8125rem; color:var(--text-muted); font-weight:700;">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</div>
+          <div class="cart-row">
+            <div style="flex:1;">
+              <div style="margin-bottom:0.35rem;">${metaTag}</div>
+              <div class="cart-row-title">${escapeHtml(cleanTitle)}</div>
+              <div class="cart-row-price">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</div>
             </div>
-            ${rightControls}
+            <button class="cart-remove-link" onclick="removeFromCart(${item.id})" title="Gỡ sản phẩm này khỏi giỏ">
+              <svg class="ui-icon" style="width:0.85rem;height:0.85rem;" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              <span>Xóa</span>
+            </button>
           </div>
         `;
       }).join('');
