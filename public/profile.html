@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Không Gian Học Viên — JetJet Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #171717;
+      --text-muted: #737373;
+      --text-subtle: #a3a3a3;
+      --border: #e5e5e5;
+      --black: #0a0a0a;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-pill: 9999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 68rem;
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+      width: 100%;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 800; font-size: 1.15rem; color: var(--black);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .brand-tag {
+      font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 0.15rem 0.5rem; border-radius: var(--radius-pill);
+    }
+
+    .ui-icon {
+      width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      display: inline-block; vertical-align: middle;
+    }
+
+    .cart-btn {
+      background: #ffffff; border: 1px solid var(--border);
+      color: var(--text); padding: 0.5rem 0.85rem; border-radius: var(--radius-pill);
+      font-size: 0.825rem; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      text-decoration: none; transition: border-color 0.15s;
+    }
+    .cart-btn:hover { border-color: var(--black); }
+
+    .btn-solid-black {
+      background: var(--black); color: #fff; border: none;
+      padding: 0.65rem 1.25rem; border-radius: var(--radius-sm);
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .btn-solid-black:hover { background: #333; }
+
+    /* Dashboard Layout */
+    .dashboard-wrap {
+      padding-block: 2.5rem;
+      display: grid;
+      grid-template-columns: 18rem 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .dashboard-wrap {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    /* Sidebar */
+    .dash-sidebar {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .user-profile-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .user-avatar-circle {
+      width: 3.5rem; height: 3.5rem; border-radius: 50%;
+      background: var(--black); color: #fff; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; flex-shrink: 0; position: relative;
+      overflow: hidden; border: 2px solid var(--border);
+    }
+    .user-avatar-circle img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .dash-nav {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .dash-nav-btn {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+      border: none; background: none; color: var(--text-muted);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer;
+      text-align: left; width: 100%; transition: all 0.15s ease;
+    }
+    .dash-nav-btn:hover {
+      background: var(--bg); color: var(--text);
+    }
+    .dash-nav-btn.active {
+      background: var(--black); color: #ffffff;
+    }
+    .dash-nav-btn.active .ui-icon {
+      stroke: #ffffff;
+    }
+
+    /* Main Content Area */
+    .dash-content {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      min-height: 28rem;
+    }
+
+    .pane-head {
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pane-title {
+      font-size: 1.25rem; font-weight: 800; color: var(--text);
+      letter-spacing: -0.01em; margin-bottom: 0.25rem;
+    }
+    .pane-desc {
+      font-size: 0.825rem; color: var(--text-muted);
+    }
+
+    /* Course Card in Hub */
+    .course-card-hub {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.35rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      background: #ffffff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .course-card-hub:hover {
+      border-color: #a3a3a3;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    /* Stats Box in Orders */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .stat-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-item-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .stat-item-val { font-size: 1.35rem; font-weight: 800; color: var(--black); margin-top: 0.25rem; }
+
+    /* Form Styles */
+    .form-group {
+      display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      font-size: 0.775rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;
+    }
+    .form-group input {
+      padding: 0.75rem 0.9rem; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 0.875rem; font-family: inherit; color: var(--text);
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--black); background: #ffffff;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+      font-size: 0.825rem; margin-bottom: 1.25rem; display: none;
+    }
+    .alert-banner.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .alert-banner.error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding-block: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-subtle);
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-inner">
+      <a href="/" class="brand">
+        <svg class="ui-icon" style="width:1.25rem;height:1.25rem;" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>JetJet Store</span>
+        <span class="brand-tag">Không Gian Học Viên</span>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <a href="/" class="cart-btn">
+          <svg class="ui-icon" style="width:1rem;height:1rem;" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+          <span>Về trang chủ</span>
+        </a>
+        <button class="cart-btn" id="btn-logout" style="color:#dc2626; border-color:#fecaca;">
+          <svg class="ui-icon" style="width:1rem;height:1rem;" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <span>Đăng xuất</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <div class="container">
+    <div class="dashboard-wrap">
+      
+      <!-- Sidebar (3 Mục Tinh Gọn) -->
+      <aside class="dash-sidebar">
+        <div class="user-profile-header">
+          <div class="user-avatar-circle" id="user-avatar-monogram">PH</div>
+          <div style="min-width:0; flex:1;">
+            <div style="font-weight:800; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="user-display-name">Học viên</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="user-display-email">email@domain.com</div>
+          </div>
+        </div>
+
+        <nav class="dash-nav">
+          <button type="button" class="dash-nav-btn active" data-tab="tab-learning">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            <span>Không gian học tập</span>
+          </button>
+          <button type="button" class="dash-nav-btn" data-tab="tab-billing">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+            <span>Lịch sử giao dịch</span>
+          </button>
+          <button type="button" class="dash-nav-btn" data-tab="tab-account">
+            <svg class="ui-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Cài đặt tài khoản</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content Tabs -->
+      <main class="dash-content">
+        <div id="alert-banner" class="alert-banner"></div>
+
+        <!-- 1. KHÔNG GIAN HỌC TẬP (MẶC ĐỊNH) -->
+        <section id="tab-learning" class="tab-pane">
+          <div class="pane-head">
+            <h2 class="pane-title">Khóa học &amp; Tài liệu của tôi</h2>
+            <p class="pane-desc">Toàn bộ bài giảng, mã nguồn và liên kết Google Drive bạn sở hữu trọn đời.</p>
+          </div>
+          <div id="courses-list-container">
+            <!-- Injected via JS -->
+          </div>
+        </section>
+
+        <!-- 2. LỊCH SỬ GIAO DỊCH -->
+        <section id="tab-billing" class="tab-pane" style="display:none;">
+          <div class="pane-head">
+            <h2 class="pane-title">Lịch sử giao dịch</h2>
+            <p class="pane-desc">Thống kê mua sắm và chi tiết các đơn hàng thanh toán qua VietQR.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-item-label">Tổng đơn hàng</div>
+              <div class="stat-item-val" id="stat-orders">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-item-label">Tổng chi tiêu</div>
+              <div class="stat-item-val" id="stat-spent">0đ</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-item-label">Đang chờ xử lý</div>
+              <div class="stat-item-val" id="stat-pending">0</div>
+            </div>
+          </div>
+
+          <div id="orders-list-container">
+            <!-- Injected via JS -->
+          </div>
+        </section>
+
+        <!-- 3. CÀI ĐẶT TÀI KHOẢN -->
+        <section id="tab-account" class="tab-pane" style="display:none;">
+          <div class="pane-head">
+            <h2 class="pane-title">Cài đặt tài khoản</h2>
+            <p class="pane-desc">Quản lý tên hiển thị và mật khẩu đăng nhập tại một nơi duy nhất.</p>
+          </div>
+
+          <!-- Section A: Hồ sơ -->
+          <form id="form-update-profile" style="margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid var(--border);">
+            <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:1rem;">1. Thông tin cá nhân</h3>
+            <div class="form-group">
+              <label>Địa chỉ Email (Định danh)</label>
+              <input type="email" id="acc-email" readonly disabled style="opacity:0.75; cursor:not-allowed;" />
+            </div>
+            <div class="form-group">
+              <label>Họ và tên hiển thị</label>
+              <input type="text" id="acc-name" required placeholder="Nhập tên của bạn" />
+            </div>
+            <button type="submit" class="btn-solid-black" id="btn-save-name">Lưu họ tên</button>
+          </form>
+
+          <!-- Section B: Đổi mật khẩu -->
+          <form id="form-update-password" style="margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px dashed var(--border);">
+            <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:1rem;">2. Bảo mật mật khẩu</h3>
+            <div class="form-group">
+              <label>Mật khẩu hiện tại</label>
+              <input type="password" id="pw-current" required placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label>Mật khẩu mới (tối thiểu 6 ký tự)</label>
+              <input type="password" id="pw-new" required placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label>Xác nhận mật khẩu mới</label>
+              <input type="password" id="pw-confirm" required placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn-solid-black" id="btn-save-pw">Cập nhật mật khẩu mới</button>
+          </form>
+
+          <!-- Section C: Vùng nguy hiểm -->
+          <div>
+            <h3 style="font-size:0.95rem; font-weight:700; color:#dc2626; margin-bottom:0.4rem;">3. Vùng nguy hiểm</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Sau khi xóa, tài khoản sẽ không thể đăng nhập lại. Các tài liệu đã mua vẫn được lưu trên Google Drive của bạn.</p>
+            <button type="button" id="btn-delete-acc" style="background:#fff; border:1px solid #fecaca; color:#dc2626; padding:0.6rem 1.15rem; border-radius:var(--radius-sm); font-size:0.8rem; font-weight:700; cursor:pointer;">
+              Xóa vĩnh viễn tài khoản
+            </button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+      <div>© 2026 JetJet Store — Kho tri thức &amp; tài liệu số của Nguyễn Song Hoàng Phúc (HCMUTE).</div>
+      <a href="/" style="color:var(--text-muted); text-decoration:none;">Về trang chủ bán hàng ↗</a>
+    </div>
+  </footer>
+
+  <script>
+    let currentUser = null;
+
+    function showAlert(msg, type = 'success') {
+      const b = document.getElementById('alert-banner');
+      if (!b) return;
+      if (!msg) { b.style.display = 'none'; return; }
+      b.className = `alert-banner ${type}`;
+      b.textContent = msg;
+      b.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function getMonogram(name) {
+      if (!name) return 'JJ';
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    // Tab Navigation
+    document.querySelectorAll('.dash-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const targetId = btn.dataset.tab;
+        document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+        const targetPane = document.getElementById(targetId);
+        if (targetPane) targetPane.style.display = 'block';
+        showAlert(null);
+      });
+    });
+
+    // Check Auth & Load Dashboard Data
+    async function initDashboard() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) {
+          window.location.href = '/login.html?redirect=/profile.html';
+          return;
+        }
+        const data = await res.json();
+        currentUser = data.user;
+
+        // Render user summary
+        document.getElementById('user-display-name').textContent = currentUser.full_name || 'Học viên';
+        document.getElementById('user-display-email').textContent = currentUser.email || '';
+        document.getElementById('acc-name').value = currentUser.full_name || '';
+        document.getElementById('acc-email').value = currentUser.email || '';
+
+        const monogramEl = document.getElementById('user-avatar-monogram');
+        if (currentUser.avatar) {
+          monogramEl.innerHTML = `<img src="${currentUser.avatar}" alt="avatar" />`;
+        } else {
+          monogramEl.textContent = getMonogram(currentUser.full_name);
+        }
+
+        // Load courses & orders
+        await Promise.all([loadCourses(), loadStatsAndOrders()]);
+      } catch (e) {
+        console.error('Init error', e);
+        window.location.href = '/login.html?redirect=/profile.html';
+      }
+    }
+
+    // 1. Load Learning Hub
+    async function loadCourses() {
+      const container = document.getElementById('courses-list-container');
+      try {
+        const res = await fetch('/api/user/orders', { credentials: 'include' });
+        if (!res.ok) throw new Error('Không thể tải khóa học');
+        const orders = await res.json();
+        const unlockedOrders = orders.filter(o => (o.status === 'completed' || o.status === 'paid' || o.status === 'processing') && o.delivery_data);
+
+        if (unlockedOrders.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:4rem 1.5rem; color:var(--text-muted); background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm);">
+              <svg class="ui-icon" style="width:3rem;height:3rem;margin-bottom:0.75rem;color:var(--text-subtle);" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              <div style="font-weight:700; font-size:1.05rem; color:var(--text); margin-bottom:0.35rem;">Bạn chưa sở hữu khóa học nào</div>
+              <div style="font-size:0.85rem; line-height:1.5; margin-bottom:1.25rem;">Khám phá các khóa học thực chiến để bắt đầu nâng tầm kỹ năng!</div>
+              <a href="/" class="btn-solid-black" style="display:inline-flex;">Khám phá khóa học ngay →</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = unlockedOrders.map((order, idx) => {
+          const driveMatch = order.delivery_data.match(/https:\/\/(?:drive\.google\.com\/[^\s\n]+|docs\.google\.com\/[^\s\n]+)/);
+          const driveUrl = driveMatch ? driveMatch[0] : null;
+          const orderDate = order.created_at ? new Date(order.created_at).toLocaleDateString('vi-VN') : '';
+          const itemsNames = (order.items && order.items.length) 
+            ? order.items.map(i => i.product_name.replace(/^Khóa Học:\s*/i, '')).join(' + ') 
+            : order.order_code;
+
+          return `
+            <article class="course-card-hub">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+                <div>
+                  <h3 style="font-size:1.05rem; font-weight:800; color:var(--text);">${escapeHtml(itemsNames)}</h3>
+                  <div style="font-size:0.775rem; color:var(--text-muted); margin-top:4px;">
+                    Mã đơn: <span style="font-family:monospace; font-weight:600;">${order.order_code}</span> • Ngày kích hoạt: ${orderDate}
+                  </div>
+                </div>
+                <span style="font-size:0.75rem; font-weight:700; color:#15803d; background:#dcfce7; padding:0.25rem 0.65rem; border-radius:var(--radius-pill); border:1px solid #86efac; flex-shrink:0;">
+                  Đã mở khóa
+                </span>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.35rem; flex-wrap:wrap;">
+                ${driveUrl ? `
+                  <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-solid-black" style="padding:0.65rem 1.25rem; font-size:0.85rem;">
+                    <svg class="ui-icon" style="width:0.95rem;height:0.95rem;stroke:#fff;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    <span>Vào học ngay (Google Drive) ↗</span>
+                  </a>
+                ` : ''}
+                <button class="cart-btn" type="button" data-order-idx="${idx}">
+                  📋 Sao chép link &amp; tài liệu
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        window._unlockedOrders = unlockedOrders;
+        container.querySelectorAll('button[data-order-idx]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.orderIdx);
+            const ord = window._unlockedOrders[idx];
+            if (ord && ord.delivery_data) {
+              navigator.clipboard.writeText(ord.delivery_data);
+              btn.textContent = '✓ Đã chép link!';
+              setTimeout(() => { btn.textContent = '📋 Sao chép link & tài liệu'; }, 2000);
+            }
+          });
+        });
+      } catch (e) {
+        container.innerHTML = '<div style="color:#dc2626; font-size:0.85rem;">Lỗi tải khóa học. Vui lòng thử lại!</div>';
+      }
+    }
+
+    // 2. Load Stats & Orders List
+    async function loadStatsAndOrders() {
+      try {
+        const res = await fetch('/api/auth/profile', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const stats = data.stats || {};
+        const recentOrders = data.recent_orders || [];
+
+        document.getElementById('stat-orders').textContent = stats.total_orders || 0;
+        document.getElementById('stat-spent').textContent = (stats.total_spent || 0).toLocaleString('vi-VN') + 'đ';
+        document.getElementById('stat-pending').textContent = stats.pending_orders || 0;
+
+        const listContainer = document.getElementById('orders-list-container');
+        if (recentOrders.length === 0) {
+          listContainer.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.85rem;">Chưa có giao dịch nào phát sinh.</div>';
+          return;
+        }
+
+        const statusMap = {
+          pending: { label: 'Chờ thanh toán', bg: '#fef3c7', color: '#92400e' },
+          paid: { label: 'Đã nhận tiền', bg: '#e0f2fe', color: '#0369a1' },
+          processing: { label: 'Đang xử lý', bg: '#f3e8ff', color: '#6b21a8' },
+          completed: { label: 'Hoàn tất', bg: '#dcfce7', color: '#15803d' },
+          cancelled: { label: 'Đã hủy', bg: '#fee2e2', color: '#b91c1c' }
+        };
+
+        listContainer.innerHTML = recentOrders.map(o => {
+          const s = statusMap[o.status] || { label: o.status, bg: 'var(--bg)', color: 'var(--text)' };
+          const time = o.created_at ? new Date(o.created_at).toLocaleString('vi-VN') : '';
+
+          return `
+            <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <div>
+                <div style="font-weight:800; font-family:monospace; font-size:0.95rem;">${o.order_code}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${time}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:800; font-size:1rem; color:var(--black);">${Number(o.total_price || 0).toLocaleString('vi-VN')}đ</div>
+                <span style="display:inline-block; margin-top:3px; padding:0.2rem 0.55rem; border-radius:var(--radius-pill); font-size:0.725rem; font-weight:700; background:${s.bg}; color:${s.color};">
+                  ${s.label}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Stats error', e);
+      }
+    }
+
+    // Form Update Name
+    document.getElementById('form-update-profile').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newName = document.getElementById('acc-name').value.trim();
+      if (!newName) return;
+      const btn = document.getElementById('btn-save-name');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ full_name: newName })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Cập nhật thất bại');
+        showAlert('Đã lưu họ và tên thành công!', 'success');
+        document.getElementById('user-display-name').textContent = newName;
+      } catch (err) {
+        showAlert(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Form Update Password
+    document.getElementById('form-update-password').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const current_password = document.getElementById('pw-current').value;
+      const new_password = document.getElementById('pw-new').value;
+      const confirm_password = document.getElementById('pw-confirm').value;
+
+      if (new_password.length < 6) {
+        showAlert('Mật khẩu mới phải có tối thiểu 6 ký tự!', 'error');
+        return;
+      }
+      if (new_password !== confirm_password) {
+        showAlert('Xác nhận mật khẩu mới không trùng khớp!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-pw');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ current_password, new_password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Đổi mật khẩu thất bại');
+        showAlert('Đã cập nhật mật khẩu mới thành công!', 'success');
+        document.getElementById('form-update-password').reset();
+      } catch (err) {
+        showAlert(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Delete Account
+    document.getElementById('btn-delete-acc').addEventListener('click', async () => {
+      const pw = prompt('Vui lòng nhập mật khẩu tài khoản của bạn để xác nhận xóa:');
+      if (!pw) return;
+      try {
+        const res = await fetch('/api/auth/delete-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ password: pw })
+        });
+        if (res.ok) {
+          alert('Đã xóa tài khoản. Cảm ơn bạn đã đồng hành cùng JetJet Store!');
+          window.location.href = '/';
+        } else {
+          const d = await res.json();
+          alert(d.error || 'Không thể xóa tài khoản lúc này');
+        }
+      } catch (e) {
+        alert('Lỗi kết nối máy chủ');
+      }
+    });
+
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      } finally {
+        window.location.href = '/';
+      }
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>
