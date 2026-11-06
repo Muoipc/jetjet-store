@@ -1251,7 +1251,11 @@
 
           <!-- Sidebar Vertical Navigation -->
           <nav class="profile-sidebar-nav">
-            <button type="button" class="profile-nav-item active" data-tab="tab-prof-info">
+            <button type="button" class="profile-nav-item active" data-tab="tab-prof-courses">
+              <svg class="ui-icon" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              <span>Khóa học của tôi</span>
+            </button>
+            <button type="button" class="profile-nav-item" data-tab="tab-prof-info">
               <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               <span>Thông tin cá nhân</span>
             </button>
@@ -1276,8 +1280,19 @@
         <main class="profile-main-content">
           <div id="profile-alert-box" style="display:none; margin-bottom:1rem; padding:0.65rem 0.85rem; border-radius:var(--radius-sm); font-size:0.825rem; line-height:1.4;"></div>
 
+          <!-- TAB 0: KHÓA HỌC CỦA TÔI -->
+          <div class="profile-tab-pane active" id="tab-prof-courses">
+            <div class="profile-pane-header">
+              <h4 class="profile-pane-title">Kho tài liệu &amp; Khóa học của tôi</h4>
+              <p class="profile-pane-subtitle">Tất cả bài giảng, mã nguồn và tài liệu Google Drive bạn đã sở hữu trọn đời.</p>
+            </div>
+            <div id="profile-courses-list" style="display:flex; flex-direction:column; gap:0.85rem;">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
           <!-- TAB 1: THÔNG TIN CÁ NHÂN -->
-          <div class="profile-tab-pane active" id="tab-prof-info">
+          <div class="profile-tab-pane" id="tab-prof-info" style="display:none;">
             <div class="profile-pane-header">
               <h4 class="profile-pane-title">Thông tin tài khoản</h4>
               <p class="profile-pane-subtitle">Quản lý tên hiển thị và thông tin liên hệ của bạn tại JetJet Store.</p>
@@ -1860,7 +1875,11 @@
               <span>${escapeHtml(shortName)}</span>
               <svg class="ui-icon" style="width:0.75rem;height:0.75rem;" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
             </button>
-            <div id="account-dropdown-menu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-sm); min-width:180px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:999; overflow:hidden;">
+            <div id="account-dropdown-menu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-sm); width:200px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:999; overflow:hidden;">
+              <button class="dropdown-item" id="dd-courses" style="font-weight:700;">
+                <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+                <span>Khóa học của tôi</span>
+              </button>
               <button class="dropdown-item" id="dd-profile">
                 <svg class="ui-icon" style="width:0.95rem;height:0.95rem;" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>Hồ sơ cá nhân</span>
@@ -1889,12 +1908,20 @@
             menuDd.style.display = menuDd.style.display === 'none' ? 'block' : 'none';
           });
         }
+        const ddCourses = document.getElementById('dd-courses');
+        if (ddCourses) {
+          ddCourses.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDd) menuDd.style.display = 'none';
+            openProfileModal('tab-prof-courses');
+          });
+        }
         const ddProfile = document.getElementById('dd-profile');
         if (ddProfile) {
           ddProfile.addEventListener('click', (e) => {
             e.stopPropagation();
             if (menuDd) menuDd.style.display = 'none';
-            openProfileModal();
+            openProfileModal('tab-prof-info');
           });
         }
         const ddOrders = document.getElementById('dd-orders');
@@ -3489,7 +3516,7 @@
       }
     }
 
-    async function openProfileModal(initialTab = 'tab-prof-info') {
+    async function openProfileModal(initialTab = 'tab-prof-courses') {
       if (!profileModal) return;
       setProfileAlert(null);
       switchProfileTab(initialTab);
@@ -3526,6 +3553,64 @@
           if (infoEmailEl) infoEmailEl.value = user.email || '';
           const infoNameEl = document.getElementById('prof-info-name');
           if (infoNameEl) infoNameEl.value = user.full_name || '';
+
+          // Tab 0: My Digital Courses List
+          const coursesListEl = document.getElementById('profile-courses-list');
+          if (coursesListEl) {
+            try {
+              const resOrders = await fetch('/api/user/orders', { credentials: 'include' });
+              if (resOrders.ok) {
+                const allUserOrders = await resOrders.json();
+                const paidOrders = allUserOrders.filter(o => (o.status === 'completed' || o.status === 'paid' || o.status === 'processing') && o.delivery_data);
+
+                if (paidOrders.length === 0) {
+                  coursesListEl.innerHTML = `
+                    <div style="text-align:center; padding:3rem 1.5rem; color:var(--text-muted); background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm);">
+                      <svg class="ui-icon" style="width:2.5rem;height:2.5rem;margin-bottom:0.5rem;color:var(--text-subtle);" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+                      <div style="font-weight:700; font-size:0.95rem; color:var(--text); margin-bottom:0.35rem;">Bạn chưa sở hữu khóa học nào</div>
+                      <div style="font-size:0.8rem; line-height:1.5; margin-bottom:1rem;">Hãy chọn khóa học bạn yêu thích để bắt đầu học ngay hôm nay!</div>
+                      <button type="button" class="btn-solid-black" onclick="closeProfileModal()" style="display:inline-flex; width:auto; padding:0.5rem 1.25rem; font-size:0.8rem;">Khám phá khóa học</button>
+                    </div>
+                  `;
+                } else {
+                  coursesListEl.innerHTML = paidOrders.map(order => {
+                    const driveMatch = order.delivery_data.match(/https:\/\/(?:drive\.google\.com\/[^\s\n]+|docs\.google\.com\/[^\s\n]+)/);
+                    const driveUrl = driveMatch ? driveMatch[0] : null;
+                    const orderDate = order.created_at ? new Date(order.created_at).toLocaleDateString('vi-VN') : '';
+                    const itemsNames = (order.items && order.items.length) 
+                      ? order.items.map(i => i.product_name.replace(/^Khóa Học:\s*/i, '')).join(' + ') 
+                      : order.order_code;
+
+                    return `
+                      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; display:flex; flex-direction:column; gap:0.65rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.75rem;">
+                          <div>
+                            <div style="font-size:0.95rem; font-weight:700; color:var(--text); line-height:1.4;">${escapeHtml(itemsNames)}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">Mã đơn: <span style="font-family:monospace;">${order.order_code}</span> • Ngày sở hữu: ${orderDate}</div>
+                          </div>
+                          <span style="font-size:0.725rem; font-weight:700; color:#15803d; background:#dcfce7; padding:0.2rem 0.5rem; border-radius:var(--radius-pill); border:1px solid #86efac; flex-shrink:0;">Đã mở khóa</span>
+                        </div>
+                        
+                        <div style="display:flex; align-items:center; gap:0.6rem; margin-top:0.35rem; flex-wrap:wrap;">
+                          ${driveUrl ? `
+                            <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-solid-black" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1rem; font-size:0.8rem; text-decoration:none; border-radius:var(--radius-sm); font-weight:700;">
+                              <svg class="ui-icon" style="width:0.85rem;height:0.85rem;stroke:#fff;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                              <span>Vào học ngay ↗</span>
+                            </a>
+                          ` : ''}
+                          <button class="cart-btn" type="button" onclick="copyDeliveryData(this, ${JSON.stringify(order.delivery_data)})" style="padding:0.5rem 0.85rem; font-size:0.775rem;">
+                            📋 Sao chép hướng dẫn &amp; link
+                          </button>
+                        </div>
+                      </div>
+                    `;
+                  }).join('');
+                }
+              }
+            } catch (errOrders) {
+              console.error('Error fetching user courses in profile:', errOrders);
+            }
+          }
 
           // Tab 3: Recent Orders List
           const recentListEl = document.getElementById('profile-recent-orders-list');
